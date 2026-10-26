@@ -1,0 +1,397 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Código da Vinci — Matemática + Informática</title>
+<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=17">
+<link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'jogo/css/moldura.css' %}?v=3">
+</head>
+<body>
+
+<!-- CAPA -->
+<section id="screen-capa" class="capa">
+  <img class="capa-retrato" src="{% static 'jogo/img/leonardo.jpg' %}" alt="">
+
+  <div class="capa-centro">
+    <h1 class="capa-titulo"><span>O Código</span><span>Da Vinci</span></h1>
+    <p class="capa-sub">Matemática <b>+</b> Informática</p>
+    <button class="capa-btn" id="btnCapa">Iniciar Vídeo</button>
+  </div>
+
+  <div class="capa-arte" aria-hidden="true">
+    <svg class="capa-vitruvio" viewBox="0 0 120 120" fill="none" stroke-linecap="round">
+      <circle cx="60" cy="62" r="52"/>
+      <rect x="14" y="20" width="92" height="92"/>
+      <circle cx="60" cy="32" r="8"/>
+      <path d="M60 40V78M60 78L44 112M60 78L76 112M60 78L32 106M60 78L88 106"/>
+      <path d="M14 48H106M60 48L22 26M60 48L98 26"/>
+    </svg>
+    <svg class="capa-rede" viewBox="0 0 120 110" fill="none">
+      <path d="M20 22L58 34L96 14M58 34L92 58L60 78L24 62L58 34M60 78L40 102M60 78L88 98M92 58L112 44"/>
+      <g class="nos">
+        <circle cx="20" cy="22" r="5"/><circle cx="58" cy="34" r="6"/><circle cx="96" cy="14" r="5"/>
+        <circle cx="92" cy="58" r="5"/><circle cx="60" cy="78" r="6"/><circle cx="24" cy="62" r="5"/>
+        <circle cx="40" cy="102" r="4"/><circle cx="88" cy="98" r="4"/><circle cx="112" cy="44" r="4"/>
+      </g>
+    </svg>
+    <div class="capa-binario">0101<br>1010<br>0101</div>
+  </div>
+</section>
+
+<!-- VÍDEO DE ABERTURA (passa depois da capa, antes das regras) -->
+<section id="screen-video" class="video-abertura hidden" data-video="L5oRntBYDis">
+  <div class="video-quadro" id="videoQuadro"></div>
+  <button class="video-pular" id="btnPularVideo">Pular vídeo ▸</button>
+</section>
+
+
+<!-- MOLDURA: definições (latão, papel rasgado, engrenagem) -->
+<svg class="moldura-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="latao" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6e2a4"/>
+      <stop offset="0.45" stop-color="#bd8e3e"/>
+      <stop offset="1" stop-color="#6a461a"/>
+    </linearGradient>
+    <radialGradient id="halo-vela">
+      <stop offset="0" stop-color="#ffb347" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffb347" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="papel-rasgado" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="ruido"/>
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <symbol id="engrenagem" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" fill="none" stroke="url(#latao)" stroke-width="14" stroke-dasharray="10.47 10.47"/>
+      <circle cx="50" cy="50" r="35" fill="url(#latao)"/>
+      <circle cx="50" cy="50" r="25" fill="#160c2c"/>
+      <path d="M50 26V74M26 50H74M33 33L67 67M67 33L33 67" stroke="url(#latao)" stroke-width="6"/>
+      <circle cx="50" cy="50" r="10" fill="url(#latao)"/>
+      <circle cx="50" cy="50" r="3.5" fill="#160c2c"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- MOLDURA: borda de latão da tela com engrenagens nos cantos -->
+<div class="moldura-tela" aria-hidden="true">
+  <svg class="moldura-canto canto-se" viewBox="0 0 100 100"><use href="#engrenagem"/></svg>
+  <svg class="moldura-canto canto-sd" viewBox="0 0 100 100"><use href="#engrenagem"/></svg>
+  <svg class="moldura-canto canto-ie" viewBox="0 0 100 100"><use href="#engrenagem"/></svg>
+  <svg class="moldura-canto canto-id" viewBox="0 0 100 100"><use href="#engrenagem"/></svg>
+</div>
+
+<div class="stage">
+
+  <!-- LATERAIS: pergaminhos com frases de Leonardo e esboços de matemática e informática -->
+  <aside class="borda borda-esq" aria-label="Frases de Leonardo da Vinci sobre matemática">
+    <div class="pergaminho pergaminho-esboco">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="42"/>
+        <polygon points="50,8 86.4,71 13.6,71"/>
+        <rect x="29" y="29" width="42" height="42"/>
+        <path d="M50 8V71"/>
+      </svg>
+      <div class="pergaminho-notas" aria-hidden="true">a² + b² = c²<br>π ≈ 3,1416<br>φ ≈ 1,618</div>
+    </div>
+    <blockquote class="pergaminho borda-frase">
+      “Nenhuma investigação humana pode ser chamada de verdadeira ciência se não passar pelas demonstrações matemáticas.”
+      <cite>Leonardo da Vinci</cite>
+    </blockquote>
+    <div class="borda-objetos" aria-hidden="true">
+      <svg class="objeto relogio" viewBox="0 0 80 96" aria-hidden="true">
+        <circle cx="40" cy="9" r="6" fill="none" stroke="url(#latao)" stroke-width="3"/>
+        <rect x="36" y="13" width="8" height="9" fill="url(#latao)"/>
+        <circle cx="40" cy="56" r="37" fill="url(#latao)"/>
+        <circle cx="40" cy="56" r="30" fill="#f3e6c2"/>
+        <circle cx="40" cy="56" r="25" fill="none" stroke="#3a2713" stroke-width="4" stroke-dasharray="1.3 11.79"/>
+        <path d="M40 56V37" stroke="#3a2713" stroke-width="3" stroke-linecap="round"/>
+        <path d="M40 56L54 63" stroke="#3a2713" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="40" cy="56" r="3" fill="#7a3b12"/>
+      </svg>
+      <svg class="vela vela-pequena" viewBox="0 0 60 120" aria-hidden="true">
+        <ellipse cx="30" cy="26" rx="28" ry="30" fill="url(#halo-vela)"/>
+        <g class="chama">
+          <path d="M30 6C38 20 40 28 30 40C20 28 22 20 30 6Z" fill="#ffab3d"/>
+          <path d="M30 18C34 26 34 31 30 37C26 31 26 26 30 18Z" fill="#fff3c4"/>
+        </g>
+        <path d="M30 38V46" stroke="#2a1a0e" stroke-width="2"/>
+        <rect x="19" y="44" width="22" height="52" rx="3" fill="#efe0b8"/>
+        <path d="M19 47h22v5c-3 7-6 1-8 9-2-9-7-2-14-9z" fill="#fff8e2"/>
+        <path d="M8 96h44l-6 10H14z" fill="url(#latao)"/>
+        <rect x="21" y="106" width="18" height="8" rx="2" fill="url(#latao)"/>
+      </svg>
+      <svg class="objeto bussola" viewBox="0 0 90 90" aria-hidden="true">
+        <circle cx="45" cy="45" r="43" fill="url(#latao)"/>
+        <circle cx="45" cy="45" r="33" fill="#f3e6c2"/>
+        <circle cx="45" cy="45" r="29" fill="none" stroke="#5a3a1a" stroke-width="3" stroke-dasharray="0.9 6.69"/>
+        <g font-family="Georgia, serif" font-size="8" font-weight="bold" fill="#160c2c" text-anchor="middle">
+          <text x="45" y="10">N</text><text x="45" y="87">S</text><text x="83.5" y="48">L</text><text x="6.5" y="48">O</text>
+        </g>
+        <polygon points="19,45 45,41 71,45 45,49" fill="#a47a32"/>
+        <g class="agulha">
+          <polygon points="45,17 50,45 40,45" fill="#b3261e"/>
+          <polygon points="45,73 50,45 40,45" fill="#3a2713"/>
+        </g>
+        <circle cx="45" cy="45" r="3.2" fill="url(#latao)" stroke="#3a2713" stroke-width="1"/>
+      </svg>
+    </div>
+    <blockquote class="pergaminho borda-frase">
+      “Não há certeza onde não se pode aplicar uma das ciências matemáticas.”
+      <cite>Leonardo da Vinci</cite>
+    </blockquote>
+    <div class="borda-base borda-extra">
+      <svg class="vela" viewBox="0 0 60 120" aria-hidden="true">
+        <ellipse cx="30" cy="26" rx="28" ry="30" fill="url(#halo-vela)"/>
+        <g class="chama">
+          <path d="M30 6C38 20 40 28 30 40C20 28 22 20 30 6Z" fill="#ffab3d"/>
+          <path d="M30 18C34 26 34 31 30 37C26 31 26 26 30 18Z" fill="#fff3c4"/>
+        </g>
+        <path d="M30 38V46" stroke="#2a1a0e" stroke-width="2"/>
+        <rect x="19" y="44" width="22" height="52" rx="3" fill="#efe0b8"/>
+        <path d="M19 47h22v5c-3 7-6 1-8 9-2-9-7-2-14-9z" fill="#fff8e2"/>
+        <path d="M8 96h44l-6 10H14z" fill="url(#latao)"/>
+        <rect x="21" y="106" width="18" height="8" rx="2" fill="url(#latao)"/>
+      </svg>
+      <div class="pergaminho pergaminho-esboco pergaminho-mini">
+        <svg class="esboco-largo" viewBox="-3.4 -5.4 13.8 8.8" aria-hidden="true">
+          <rect x="0" y="0" width="1" height="1"/><rect x="1" y="0" width="1" height="1"/>
+          <rect x="0" y="1" width="2" height="2"/><rect x="-3" y="0" width="3" height="3"/>
+          <rect x="-3" y="-5" width="5" height="5"/><rect x="2" y="-5" width="8" height="8"/>
+          <path d="M0,1A1,1 0 0 1 1,0A1,1 0 0 1 2,1A2,2 0 0 1 0,3A3,3 0 0 1 -3,0A5,5 0 0 1 2,-5A8,8 0 0 1 10,3"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="borda borda-dir" aria-label="Frases de Leonardo da Vinci sobre matemática">
+    <div class="pergaminho pergaminho-esboco">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <rect x="10" y="14" width="80" height="56" rx="5"/>
+        <path d="M50 70V84M30 86H70"/>
+        <path d="M38 31L27 42L38 53M62 31L73 42L62 53M55 28L45 56"/>
+      </svg>
+      <div class="pergaminho-notas pergaminho-binario" aria-hidden="true">01001100<br>01000100<br>01010110</div>
+    </div>
+    <blockquote class="pergaminho borda-frase">
+      “A mecânica é o paraíso das ciências matemáticas, porque com ela se chega ao fruto matemático.”
+      <cite>Leonardo da Vinci</cite>
+    </blockquote>
+    <div class="borda-objetos" aria-hidden="true">
+      <svg class="objeto ampulheta" viewBox="0 0 70 100" aria-hidden="true">
+        <path d="M14 10V90M56 10V90" stroke="url(#latao)" stroke-width="4"/>
+        <path d="M20 12H50C50 34 38 44 38 50C38 56 50 66 50 88H20C20 66 32 56 32 50C32 44 20 34 20 12Z" fill="rgba(210,230,255,0.22)" stroke="#e9dcc0" stroke-width="1.5"/>
+        <path d="M25 28H45C43 36 38 44 36 48H34C32 44 27 36 25 28Z" fill="#e2b25a"/>
+        <path class="areia" d="M35 48V72" stroke="#e2b25a" stroke-width="1.6" stroke-dasharray="3 3"/>
+        <path d="M22 88C24 76 30 70 35 70C40 70 46 76 48 88Z" fill="#e2b25a"/>
+        <rect x="8" y="4" width="54" height="9" rx="2.5" fill="url(#latao)"/>
+        <rect x="8" y="87" width="54" height="9" rx="2.5" fill="url(#latao)"/>
+      </svg>
+      <svg class="vela vela-pequena" viewBox="0 0 60 120" aria-hidden="true">
+        <ellipse cx="30" cy="26" rx="28" ry="30" fill="url(#halo-vela)"/>
+        <g class="chama">
+          <path d="M30 6C38 20 40 28 30 40C20 28 22 20 30 6Z" fill="#ffab3d"/>
+          <path d="M30 18C34 26 34 31 30 37C26 31 26 26 30 18Z" fill="#fff3c4"/>
+        </g>
+        <path d="M30 38V46" stroke="#2a1a0e" stroke-width="2"/>
+        <rect x="19" y="44" width="22" height="52" rx="3" fill="#efe0b8"/>
+        <path d="M19 47h22v5c-3 7-6 1-8 9-2-9-7-2-14-9z" fill="#fff8e2"/>
+        <path d="M8 96h44l-6 10H14z" fill="url(#latao)"/>
+        <rect x="21" y="106" width="18" height="8" rx="2" fill="url(#latao)"/>
+      </svg>
+      <svg class="objeto relogio" viewBox="0 0 80 96" aria-hidden="true">
+        <path d="M10 90V42A30 30 0 0 1 70 42V90Z" fill="#4a2c14" stroke="url(#latao)" stroke-width="3"/>
+        <rect x="3" y="87" width="74" height="8" rx="2" fill="url(#latao)"/>
+        <circle cx="40" cy="43" r="23" fill="url(#latao)"/>
+        <circle cx="40" cy="43" r="19" fill="#f3e6c2"/>
+        <circle cx="40" cy="43" r="15" fill="none" stroke="#3a2713" stroke-width="3" stroke-dasharray="1.1 6.754"/>
+        <path d="M40 43L31 34" stroke="#3a2713" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M40 43V29" stroke="#3a2713" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="40" cy="43" r="2.4" fill="#7a3b12"/>
+        <rect x="31" y="70" width="18" height="14" rx="2" fill="#160c2c"/>
+        <g class="pendulo">
+          <path d="M40 70V78" stroke="url(#latao)" stroke-width="1.5"/>
+          <circle cx="40" cy="79" r="3.6" fill="url(#latao)"/>
+        </g>
+      </svg>
+    </div>
+    <blockquote class="pergaminho borda-frase">
+      “A proporção não se encontra apenas nos números e nas medidas, mas também nos sons, pesos, tempos e lugares.”
+      <cite>Leonardo da Vinci</cite>
+    </blockquote>
+    <div class="borda-base borda-extra">
+      <div class="pergaminho pergaminho-esboco pergaminho-mini">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="26" y="26" width="48" height="48" rx="4"/>
+          <rect x="40" y="40" width="20" height="20"/>
+          <path d="M38 26V12M50 26V12M62 26V12M38 74V88M50 74V88M62 74V88"/>
+          <path d="M26 38H12M26 50H12M26 62H12M74 38H88M74 50H88M74 62H88"/>
+        </svg>
+      </div>
+      <svg class="vela" viewBox="0 0 60 120" aria-hidden="true">
+        <ellipse cx="30" cy="26" rx="28" ry="30" fill="url(#halo-vela)"/>
+        <g class="chama">
+          <path d="M30 6C38 20 40 28 30 40C20 28 22 20 30 6Z" fill="#ffab3d"/>
+          <path d="M30 18C34 26 34 31 30 37C26 31 26 26 30 18Z" fill="#fff3c4"/>
+        </g>
+        <path d="M30 38V46" stroke="#2a1a0e" stroke-width="2"/>
+        <rect x="19" y="44" width="22" height="52" rx="3" fill="#efe0b8"/>
+        <path d="M19 47h22v5c-3 7-6 1-8 9-2-9-7-2-14-9z" fill="#fff8e2"/>
+        <path d="M8 96h44l-6 10H14z" fill="url(#latao)"/>
+        <rect x="21" y="106" width="18" height="8" rx="2" fill="url(#latao)"/>
+      </svg>
+    </div>
+  </aside>
+
+  <div class="manuscript" role="main">
+
+    <div class="moldura-topo" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><use href="#engrenagem"/></svg>
+    </div>
+    <div class="moldura-placa" aria-hidden="true">Leonardo da Vinci · 1452 – 1519</div>
+
+    <div class="crest" aria-hidden="true">
+      <svg viewBox="0 0 100 100">
+        <g class="gear-turn" fill="none" stroke="#a678ff" stroke-width="4">
+          <circle cx="50" cy="50" r="30"/>
+          <circle cx="50" cy="50" r="6" fill="#a678ff" stroke="none"/>
+          <g stroke="#a678ff">
+            <line x1="50" y1="14" x2="50" y2="4"/>
+            <line x1="50" y1="86" x2="50" y2="96"/>
+            <line x1="14" y1="50" x2="4" y2="50"/>
+            <line x1="86" y1="50" x2="96" y2="50"/>
+            <line x1="24" y1="24" x2="17" y2="17"/>
+            <line x1="76" y1="76" x2="83" y2="83"/>
+            <line x1="76" y1="24" x2="83" y2="17"/>
+            <line x1="24" y1="76" x2="17" y2="83"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <h1 class="title">O Cofre de Leonardo</h1>
+    <p class="subtitle">Um escape room matemático pelas oficinas de Leonardo da Vinci</p>
+
+    <div class="hud" id="hud">
+      <div class="rooms" id="roomDots" aria-label="Progresso das salas"></div>
+      <div class="timer" id="timer">⏱ 00:00</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- INTRO SCREEN -->
+    <section id="screen-intro">
+      <img class="portrait-frame" src="{% static 'jogo/img/leonardo.jpg' %}" alt="Retrato pintado de Leonardo da Vinci, com barba longa e boina">
+      <p class="portrait-caption">Leonardo da Vinci</p>
+      <p class="story">
+        Florença, 1500. Você acaba de entrar na oficina secreta de Leonardo da Vinci.
+        Cadernos cheios de esboços, engrenagens e desenhos cobrem as paredes — mas a porta
+        de saída só se abre para quem souber pensar como Leonardo: com arte <em>e</em> matemática.
+      </p>
+      <div class="pergaminho pergaminho-regras">
+      <p class="regras-titulo"><strong>Como jogar:</strong></p>
+      <ul class="rules">
+        <li>O jogo tem <strong>3 salas</strong>: Fácil, Média e Difícil.</li>
+        <li>Cada sala tem <strong>5 desafios</strong>. Resolva-os em ordem para avançar.</li>
+        <li>Você tem <strong>15 minutos</strong> no relógio para escapar da oficina — o tempo corre mesmo enquanto você pensa!</li>
+        <li>Ao concluir cada sala, você ganha um <strong>número do código</strong> do cofre final. Guarde os três!</li>
+        <li>Se travar, use a <strong>dica</strong> — mas tente sozinho primeiro!</li>
+        <li>A cada <strong>nova partida</strong>, a oficina se reorganiza e traz desafios diferentes dos da partida anterior, para que ninguém já saiba as respostas.</li>
+        <li>No final, digite os três números, na ordem das salas, para abrir o Cofre de Leonardo.</li>
+      </ul>
+      </div>
+      <button class="btn-big" id="btnStart">Iniciar Desafio</button>
+    </section>
+
+    <!-- LEVEL SCREEN (shared template) -->
+    <section id="screen-level" class="hidden">
+      <p class="story" id="levelStory"></p>
+      <div class="puzzle-card">
+        <div class="puzzle-label" id="puzzleLabel">DESAFIO 1 DE 3</div>
+        <p class="puzzle-question" id="puzzleQuestion"></p>
+        <div id="puzzleBody" class="puzzle-body" data-monalisa="{% static 'jogo/img/monalisa.jpg' %}?v=2"></div>
+        <div class="center-actions">
+          <button class="btn-primary" id="btnCheck">Verificar</button>
+        </div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+        <button class="hint-toggle" id="btnHint">Preciso de uma dica</button>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+    </section>
+
+    <!-- FRAGMENT REVEAL SCREEN -->
+    <section id="screen-fragment" class="hidden">
+      <div class="fragment-reveal">
+        <p class="story" id="fragmentStory" style="text-align:left;"></p>
+        <div class="fragment-num" id="fragmentNum">?</div>
+        <p>Você conquistou um número do código do Cofre de Leonardo! Guarde-o: você vai precisar dele no final.</p>
+        <button class="btn-big" id="btnNextLevel">Continuar</button>
+      </div>
+    </section>
+
+    <!-- VAULT / FINAL SCREEN -->
+    <section id="screen-vault" class="hidden">
+      <p class="story">
+        Você chegou à câmara final. Digite, na ordem das salas, os <strong>três números</strong>
+        que você conquistou para abrir o Cofre de Leonardo.
+      </p>
+      <div class="puzzle-card">
+        <div class="puzzle-label">O CÓDIGO DO COFRE</div>
+        <div class="vault-code-row" aria-hidden="true">
+          <div class="vault-slot" id="slot0">•</div>
+          <div class="vault-slot" id="slot1">•</div>
+          <div class="vault-slot" id="slot2">•</div>
+        </div>
+        <div class="answer-row">
+          <label for="vaultInput" class="hidden">Código do cofre</label>
+          <input type="text" id="vaultInput" placeholder="Digite o código de 3 dígitos" autocomplete="off" inputmode="numeric" maxlength="3">
+          <button class="btn-primary" id="btnVaultCheck">Abrir o Cofre</button>
+        </div>
+        <div class="feedback" id="vaultFeedback" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- VICTORY SCREEN -->
+    <section id="screen-victory" class="hidden">
+      <div class="fragment-reveal">
+        <h1 class="title" style="font-size:1.6rem;">🏛 O Cofre se Abre!</h1>
+        <p style="font-size:1.4rem; font-weight:bold; color:var(--gold-bright); margin:10px 0 18px;">Parabéns, você abriu o Cofre de Leonardo da Vinci!</p>
+        <p class="story" style="text-align:left;">
+          As engrenagens giram, e uma réplica do sorriso da Mona Lisa aparece gravada na
+          porta. Você pensou como Leonardo da Vinci: uniu arte, curiosidade e matemática
+          para desvendar seus segredos.
+        </p>
+        <p>Tempo total: <strong id="finalTime">00:00</strong></p>
+        <div class="fact-box">
+          <strong>Você sabia?</strong> Leonardo da Vinci usava a Razão Áurea (φ ≈ 1,618) e a
+          sequência de Fibonacci para planejar proporções em obras como o Homem Vitruviano
+          e a Mona Lisa. Ele também escrevia seus cadernos de trás para frente — só era
+          possível ler o texto com um espelho!
+        </div>
+        <button class="btn-big" id="btnRestart">Jogar Novamente</button>
+      </div>
+    </section>
+
+    <!-- TIME UP SCREEN -->
+    <section id="screen-timeout" class="hidden">
+      <div class="fragment-reveal">
+        <h1 class="title" style="font-size:1.6rem;">⏳ O Tempo Acabou!</h1>
+        <p style="font-size:1.4rem; font-weight:bold; color:var(--wax); margin:10px 0 18px;">Que pena! Você não conseguiu abrir o Cofre de Leonardo da Vinci.</p>
+        <p class="story" style="text-align:left;">
+          As velas da oficina se apagam. Leonardo balança a cabeça: "O tempo é o mais precioso
+          de todos os bens, mas nunca sabemos o seu valor até desperdiçá-lo." Tente novamente e
+          use cada minuto com sabedoria.
+        </p>
+        <button class="btn-big" id="btnRestartTimeout">Tentar Novamente</button>
+      </div>
+    </section>
+
+    <footer class="credits credits-colegio">Centro Educacional Vieira Brum</footer>
+  </div>
+</div>
+
+<script src="{% static 'jogo/js/jogo.js' %}?v=29"></script>
+
+</body>
+</html>

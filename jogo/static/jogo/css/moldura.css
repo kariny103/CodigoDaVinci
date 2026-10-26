@@ -1,0 +1,335 @@
+/* Moldura de oficina: latão, engrenagens, velas e pergaminhos laterais */
+
+:root{
+  --latao-claro: #f6e2a4;
+  --latao: #c9a35a;
+  --latao-escuro: #6a461a;
+  --madeira: #160c2c;
+  --tinta-sepia: #3a2713;
+  --traco-sepia: #5a3a1a;
+}
+
+/* ---------- Fundo roxo atrás do jogo ---------- */
+html,body{
+  background-color: #1b0d40;
+  background-image:
+    radial-gradient(ellipse at 50% 15%, rgba(166,120,255,0.30), transparent 60%),
+    radial-gradient(ellipse at 8% 92%, rgba(255,171,61,0.16), transparent 40%),
+    radial-gradient(ellipse at 92% 92%, rgba(255,171,61,0.16), transparent 40%),
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.20) 0 2px, transparent 2px 96px),
+    linear-gradient(180deg, #3a1f7a, #1b0d40);
+}
+
+.moldura-defs{ position: absolute; }
+
+/* ---------- Borda de latão em volta da tela ---------- */
+.moldura-tela{
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+  border: 12px solid var(--latao);
+  border-image: linear-gradient(135deg, var(--latao-claro), #a47a32 28%, #e6c67c 50%, var(--latao-escuro) 74%, #d9b663) 1;
+  box-shadow:
+    inset 0 0 0 3px var(--madeira),
+    inset 0 0 0 5px rgba(201,163,90,0.75),
+    inset 0 0 60px rgba(0,0,0,0.75);
+}
+.moldura-canto{
+  position: absolute;
+  width: 118px;
+  height: 118px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.7));
+  animation: spin 40s linear infinite;
+}
+.canto-se{ top: -46px; left: -46px; }
+.canto-sd{ top: -46px; right: -46px; animation-direction: reverse; }
+.canto-ie{ bottom: -46px; left: -46px; animation-direction: reverse; }
+.canto-id{ bottom: -46px; right: -46px; }
+
+/* ---------- Moldura do painel do jogo ---------- */
+.stage{ padding: 58px 16px 52px; }
+
+.manuscript{
+  border: 6px solid var(--latao);
+  border-image: linear-gradient(135deg, var(--latao-claro), #a47a32 30%, #e6c67c 50%, var(--latao-escuro) 75%, #d9b663) 1;
+  box-shadow:
+    0 0 0 4px var(--madeira),
+    0 0 0 6px rgba(201,163,90,0.8),
+    0 30px 80px rgba(0,0,0,0.85),
+    0 0 50px rgba(255,171,61,0.18),
+    inset 0 0 50px rgba(0,0,0,0.55);
+}
+.manuscript::before, .manuscript::after{
+  border-color: var(--latao);
+  opacity: 0.8;
+}
+.manuscript .crest{ display: none; }
+
+.moldura-topo{
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  width: 210px;
+  height: 46px;
+  transform: translateX(-50%);
+  border-radius: 23px 23px 6px 6px;
+  background: linear-gradient(180deg, var(--latao-claro), #b78a3c 45%, var(--latao-escuro));
+  box-shadow: 0 0 0 3px var(--madeira), 0 6px 14px rgba(0,0,0,0.7);
+}
+.moldura-topo svg{
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  width: 78px;
+  height: 78px;
+  margin-left: -39px;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.7));
+  animation: spin 24s linear infinite;
+}
+.moldura-placa{
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 26px;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--madeira);
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--latao-claro), #b78a3c 55%, #8a6328);
+  box-shadow: 0 0 0 3px var(--madeira), 0 5px 12px rgba(0,0,0,0.7);
+}
+
+/* nome do colégio em destaque no rodapé do painel */
+footer.credits-colegio{
+  margin: 30px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(201,163,90,0.55);
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--latao-claro);
+  opacity: 1;
+  text-shadow: 0 0 14px rgba(255,171,61,0.55), 0 2px 0 rgba(0,0,0,0.6);
+}
+
+/* ---------- Colunas laterais ---------- */
+.borda{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: calc((100vw - 860px) / 2);
+  padding: 54px 40px 48px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 1vh;
+  text-align: center;
+  pointer-events: none;
+}
+.borda-esq{ left: 0; }
+.borda-dir{ right: 0; }
+.borda > *{ max-width: 270px; }
+
+/* ---------- Pergaminhos ---------- */
+.pergaminho{
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  padding: 1.15em 1.2em 1em;
+  color: var(--tinta-sepia);
+  transform: rotate(-2deg);
+}
+.borda-dir .pergaminho{ transform: rotate(1.8deg); }
+.borda .pergaminho:nth-child(2){ transform: rotate(1.2deg); }
+.borda-dir .pergaminho:nth-child(2){ transform: rotate(-1.6deg); }
+/* folha de papel com as bordas rasgadas */
+.pergaminho::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 22% 18%, rgba(255,250,228,0.75), transparent 55%),
+    radial-gradient(ellipse at 85% 82%, rgba(140,95,40,0.35), transparent 55%),
+    radial-gradient(ellipse at 10% 90%, rgba(140,95,40,0.25), transparent 40%),
+    linear-gradient(165deg, #f0deb0, #e2c88f 60%, #cfae72);
+  box-shadow: inset 0 0 16px rgba(110,70,25,0.6);
+  filter: url(#papel-rasgado) drop-shadow(0 7px 8px rgba(0,0,0,0.65));
+}
+/* tachinha de latão */
+.pergaminho::after{
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--latao-claro), #a47a32 60%, var(--latao-escuro));
+  box-shadow: 0 2px 3px rgba(0,0,0,0.6);
+}
+
+/* pergaminho das regras ("Como jogar") na tela inicial */
+.pergaminho.pergaminho-regras{
+  transform: none;
+  margin: 4px 0 30px;
+  padding: 1.7em 1.9em 1.3em;
+  text-align: left;
+}
+.pergaminho-regras .regras-titulo{
+  margin: 0 0 0.5em;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  color: #7a3b12;
+}
+.pergaminho-regras ul.rules{ margin-bottom: 0; }
+.pergaminho-regras ul.rules li::marker{ color: #7a3b12; }
+
+.borda-frase{
+  font-style: italic;
+  font-size: clamp(0.6rem, 1vw, 0.82rem);
+  line-height: 1.38;
+}
+.borda-frase cite{
+  display: block;
+  margin-top: 0.5em;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 0.82em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a3b12;
+}
+
+/* esboços a bico de pena sobre o pergaminho */
+.pergaminho-esboco{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8em;
+}
+.pergaminho-esboco svg{
+  width: 4.6vw;
+  max-width: 78px;
+  min-width: 46px;
+  height: auto;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--traco-sepia);
+  stroke-width: 1.7px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pergaminho-esboco svg *{ vector-effect: non-scaling-stroke; }
+.pergaminho-esboco svg.esboco-largo{ width: 6.4vw; max-width: 110px; min-width: 64px; }
+.pergaminho-notas{
+  font-style: italic;
+  font-weight: bold;
+  font-size: clamp(0.56rem, 0.95vw, 0.8rem);
+  line-height: 1.4;
+  text-align: left;
+  white-space: nowrap;
+}
+.pergaminho-binario{
+  font-style: normal;
+  font-family: Consolas, 'Courier New', monospace;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Velas ---------- */
+.borda-base{
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+}
+.vela{
+  width: 3.6vw;
+  max-width: 60px;
+  min-width: 40px;
+  height: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.6));
+}
+.vela .chama{
+  transform-origin: 30px 40px;
+  animation: vela-chama 1.7s ease-in-out infinite;
+}
+@keyframes vela-chama{
+  0%, 100%{ transform: scale(1, 1) skewX(0deg); }
+  30%{ transform: scale(0.94, 1.07) skewX(-3deg); }
+  55%{ transform: scale(1.04, 0.95) skewX(2deg); }
+  80%{ transform: scale(0.97, 1.04) skewX(-1deg); }
+}
+
+.vela.vela-pequena{ width: 2.8vw; max-width: 46px; min-width: 32px; }
+
+/* ---------- Objetos da oficina: relógios, bússola e ampulheta ---------- */
+.borda-objetos{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  width: 100%;
+}
+.objeto{
+  width: 4vw;
+  max-width: 66px;
+  min-width: 42px;
+  height: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.6));
+}
+.objeto.ampulheta{ width: 3.4vw; max-width: 56px; min-width: 36px; }
+.relogio .pendulo{
+  transform-origin: 40px 70px;
+  animation: relogio-pendulo 2s ease-in-out infinite;
+}
+@keyframes relogio-pendulo{
+  0%, 100%{ transform: rotate(-22deg); }
+  50%{ transform: rotate(22deg); }
+}
+.bussola .agulha{
+  transform-origin: 45px 45px;
+  animation: bussola-agulha 5s ease-in-out infinite;
+}
+@keyframes bussola-agulha{
+  0%, 100%{ transform: rotate(-7deg); }
+  50%{ transform: rotate(9deg); }
+}
+.ampulheta .areia{ animation: ampulheta-areia 0.6s linear infinite; }
+@keyframes ampulheta-areia{
+  to{ stroke-dashoffset: -6; }
+}
+
+@media (min-width: 1240px){
+  .borda{ display: flex; }
+}
+@media (max-height: 700px){
+  .borda-extra{ display: none; }
+}
+@media (max-width: 700px){
+  .moldura-tela{ border-width: 6px; }
+  .moldura-canto{ width: 74px; height: 74px; }
+  .canto-se, .canto-sd{ top: -32px; }
+  .canto-ie, .canto-id{ bottom: -32px; }
+  .canto-se, .canto-ie{ left: -32px; }
+  .canto-sd, .canto-id{ right: -32px; }
+  .moldura-placa{ font-size: 0.56rem; padding: 4px 14px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .moldura-canto, .moldura-topo svg, .vela .chama,
+  .relogio .pendulo, .bussola .agulha, .ampulheta .areia{ animation: none; }
+}

@@ -1,0 +1,214 @@
+/* Capa "O Código da Vinci" + retoques neon do tema (rosa, lilás e azul) */
+
+@font-face{
+  font-family: 'Permanent Marker';
+  src: url("../fonts/PermanentMarker-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* ---------- Tema ---------- */
+html,body{
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(166,120,255,0.22), transparent 55%),
+    radial-gradient(ellipse at 10% 95%, rgba(255,95,210,0.16), transparent 50%),
+    radial-gradient(ellipse at 92% 88%, rgba(92,200,255,0.16), transparent 48%);
+}
+
+.manuscript{
+  box-shadow:
+    0 2px 0 var(--gold-bright) inset,
+    0 40px 90px -20px rgba(0,0,0,0.85),
+    0 0 0 1px rgba(166,120,255,0.45),
+    0 0 46px rgba(120,90,255,0.35);
+}
+
+h1.title{
+  background: linear-gradient(90deg, #ff5fd2, #a678ff 50%, #5cc8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary, .btn-big{ font-weight: bold; }
+.btn-primary{ box-shadow: 0 0 18px rgba(255,95,210,0.45); }
+.btn-big{ box-shadow: 0 0 18px rgba(92,200,255,0.35); }
+.portrait-frame{ box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 26px rgba(166,120,255,0.5); }
+
+/* ---------- Capa ---------- */
+.capa{
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 30fr) minmax(0, 46fr) minmax(0, 24fr);
+  align-items: center;
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+  /* mesmo roxo do fundo do jogo (moldura.css), para dar contraste no telão */
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(166,120,255,0.30), transparent 60%),
+    linear-gradient(180deg, #3a1f7a, #1b0d40);
+}
+
+.capa-retrato{
+  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 18%;
+  filter: grayscale(1) contrast(1.35) brightness(1.15);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  -webkit-mask-image: linear-gradient(90deg, #000 55%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 55%, transparent 100%);
+}
+
+.capa-centro{
+  position: relative;
+  text-align: center;
+  padding: 0 12px;
+}
+
+.capa-titulo{
+  margin: 0;
+  font-family: 'Permanent Marker', Impact, 'Arial Black', sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 8.6vw, 8rem);
+  line-height: 1.02;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transform: skewX(-8deg);
+  filter: drop-shadow(0 0 18px rgba(120,90,255,0.75)) drop-shadow(0 4px 0 rgba(30,16,110,0.55));
+}
+.capa-titulo span{
+  display: block;
+  white-space: nowrap;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.capa-titulo span:first-child{ background-image: linear-gradient(180deg, #9aeaff 10%, #b9a2ff 95%); }
+.capa-titulo span:last-child{ background-image: linear-gradient(180deg, #c7a4ff 5%, #ff6fe0 80%); }
+
+.capa-sub{
+  margin: 0.9em 0 1.4em;
+  font-size: clamp(0.8rem, 2.1vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a9ecff;
+  text-shadow: 0 0 14px rgba(92,200,255,0.6);
+}
+.capa-sub b{ color: #ff9be9; padding: 0 0.25em; }
+
+.capa-btn{
+  font-family: inherit;
+  font-size: clamp(0.8rem, 1.7vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #eaf8ff;
+  padding: 0.9em 2.6em;
+  background: rgba(34,24,128,0.7);
+  border: 2px solid #5cc8ff;
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px rgba(34,24,128,0.7), 0 0 0 5px rgba(92,200,255,0.55), 0 0 28px rgba(92,200,255,0.65);
+  animation: capa-pulso 2.2s ease-in-out infinite;
+}
+.capa-btn:hover{ background: rgba(255,95,210,0.35); border-color: #ff8be6; }
+@keyframes capa-pulso{
+  50%{ box-shadow: 0 0 0 4px rgba(34,24,128,0.7), 0 0 0 5px rgba(255,139,230,0.7), 0 0 44px rgba(255,95,210,0.75); }
+}
+
+.capa-arte{
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 4vh 2vw;
+}
+.capa-arte svg{
+  width: min(78%, 34vh);
+  height: auto;
+  stroke: #6f8dff;
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 8px rgba(92,140,255,0.9));
+}
+.capa-rede .nos circle{ fill: #4a3cc0; stroke: #8fa8ff; }
+.capa-binario{
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: clamp(0.8rem, 2vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.14em;
+  color: #c9f1ff;
+  text-shadow: 0 0 12px rgba(92,200,255,0.8);
+}
+
+/* ---------- Vídeo de abertura ---------- */
+.video-abertura{
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5vh;
+  padding: 3vh 3vw;
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(166,120,255,0.30), transparent 60%),
+    linear-gradient(180deg, #3a1f7a, #1b0d40);
+}
+.video-quadro{
+  /* 16:9, o maior que couber deixando espaço para o botão */
+  width: min(100%, calc((100vh - 6vh - 90px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 2px solid #5cc8ff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 4px rgba(34,24,128,0.7), 0 0 36px rgba(92,200,255,0.55);
+}
+.video-quadro iframe{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-pular{
+  font-family: inherit;
+  font-size: clamp(0.8rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #eaf8ff;
+  padding: 0.7em 2em;
+  background: rgba(34,24,128,0.7);
+  border: 2px solid #5cc8ff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.video-pular:hover{ background: rgba(255,95,210,0.35); border-color: #ff8be6; }
+
+@media (max-width: 700px){
+  .capa{ grid-template-columns: 1fr; }
+  .capa-retrato{
+    position: absolute;
+    inset: 0;
+    opacity: 0.28;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .capa-arte{ display: none; }
+  .capa-titulo{ font-size: clamp(2.2rem, 15vw, 5rem); }
+  .capa-sub{ font-size: clamp(0.75rem, 4vw, 1.2rem); }
+  .capa-btn{ font-size: clamp(0.8rem, 4vw, 1.1rem); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .capa-btn{ animation: none; }
+}
