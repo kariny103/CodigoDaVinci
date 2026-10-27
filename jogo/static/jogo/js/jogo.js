@@ -708,6 +708,10 @@
 
   var roomDots = document.getElementById("roomDots");
   var timerEl = document.getElementById("timer");
+  var btnSair = document.getElementById("btnSair");
+  var sairConfirma = document.getElementById("sairConfirma");
+  // telas em que a partida está em andamento e dá para desistir
+  var TELAS_EM_JOGO = ["level", "fragment", "vault"];
 
   var levelStoryEl = document.getElementById("levelStory");
   var puzzleLabelEl = document.getElementById("puzzleLabel");
@@ -784,6 +788,8 @@
     Object.keys(screens).forEach(function(k){
       if(screens[k]) screens[k].classList.toggle("hidden", k !== name);
     });
+    btnSair.classList.toggle("hidden", TELAS_EM_JOGO.indexOf(name) === -1);
+    sairConfirma.classList.add("hidden");
   }
 
   // ---------- Puzzle body renderers ----------
@@ -2512,6 +2518,7 @@
     state.secondsLeft = GAME_SECONDS;
     stopTimer();
     updateTimerDisplay();
+    renderDots();
     showScreen("intro");
     capaEl.classList.remove("hidden");
   }
@@ -2560,6 +2567,18 @@
   document.getElementById("btnRestart").addEventListener("click", restart);
   var btnRestartTimeout = document.getElementById("btnRestartTimeout");
   if(btnRestartTimeout) btnRestartTimeout.addEventListener("click", restart);
+
+  // Voltar ao início no meio da partida: pede confirmação antes de perder o progresso.
+  // O relógio continua correndo enquanto a pergunta está na tela.
+  btnSair.addEventListener("click", function(){
+    sairConfirma.classList.remove("hidden");
+    document.getElementById("btnSairNao").focus();
+  });
+  document.getElementById("btnSairNao").addEventListener("click", function(){
+    sairConfirma.classList.add("hidden");
+    btnSair.focus();
+  });
+  document.getElementById("btnSairSim").addEventListener("click", restart);
 
   // ---------- Init ----------
   updateTimerDisplay();

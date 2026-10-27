@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>O Código da Vinci — Matemática + Informática</title>
-<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=17">
+<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=18">
 <link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=4">
 <link rel="stylesheet" href="{% static 'jogo/css/moldura.css' %}?v=3">
 </head>
@@ -275,7 +275,17 @@
 
     <div class="hud" id="hud">
       <div class="rooms" id="roomDots" aria-label="Progresso das salas"></div>
+      <button class="btn-secondary btn-sair hidden" id="btnSair">⌂ Voltar ao início</button>
       <div class="timer" id="timer">⏱ 00:00</div>
+    </div>
+
+    <!-- CONFIRMAÇÃO PARA SAIR NO MEIO DA PARTIDA -->
+    <div class="sair-confirma hidden" id="sairConfirma" role="alertdialog" aria-labelledby="sairTexto">
+      <p id="sairTexto">Quer mesmo voltar ao início? O progresso desta partida será perdido.</p>
+      <div class="sair-acoes">
+        <button class="btn-secondary" id="btnSairNao">Continuar jogando</button>
+        <button class="btn-primary" id="btnSairSim">Sim, voltar ao início</button>
+      </div>
     </div>
 
     <hr class="divider">
@@ -391,7 +401,7 @@
   </div>
 </div>
 
-<script src="{% static 'jogo/js/jogo.js' %}?v=29"></script>
+<script src="{% static 'jogo/js/jogo.js' %}?v=30"></script>
 
 </body>
 </html>

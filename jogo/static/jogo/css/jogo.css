@@ -550,6 +550,27 @@ ul.rules li{ margin-bottom: 6px; }
 
 .timer.warning{ color: var(--wax); font-weight:bold; }
 
+/* botão para abandonar a partida e a confirmação que ele abre */
+.btn-sair{
+  padding: 8px 16px;
+  font-size: 0.92rem;
+}
+.sair-confirma{
+  margin: -6px 0 20px;
+  padding: 16px 18px;
+  border: 1.5px solid var(--wax);
+  border-radius: 3px;
+  background: rgba(255,95,210,0.10);
+  text-align: center;
+}
+.sair-confirma p{ margin: 0 0 14px; }
+.sair-acoes{
+  display:flex;
+  justify-content:center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .pyramid-wrap{
   display:flex;
   flex-direction:column;
