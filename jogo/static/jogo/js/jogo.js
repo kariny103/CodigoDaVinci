@@ -207,7 +207,9 @@
     };
   }
   // Ponte de Leonardo: posições dos nós (tabuleiro embaixo, arco em cima).
-  var BRIDGE_NODES = [ [60,220], [170,110], [220,220], [300,70], [380,220], [430,110], [540,220] ];
+  // duas fileiras bem separadas, para caberem círculos grandes (raio 62) com as continhas
+  var BRIDGE_NODE_R = 62;
+  var BRIDGE_NODES = [ [70,260], [150,80], [223,260], [300,80], [377,260], [450,80], [530,260] ];
   // Ordens em que os nós podem ser ligados (do menor para o maior resultado): bem
   // embaralhadas e com as vigas se cruzando. Os nós estão listados da esquerda para
   // a direita, então índices seguidos são nós vizinhos.
@@ -235,7 +237,7 @@
         if(Math.abs(order[i] - order[i + 1]) === 1) return false;
         // nenhuma viga passa por cima de outro nó
         for(k = 0; k < P.length; k++){
-          if(k !== order[i] && k !== order[i + 1] && distToBeam(P[k], P[order[i]], P[order[i + 1]]) < 42) return false;
+          if(k !== order[i] && k !== order[i + 1] && distToBeam(P[k], P[order[i]], P[order[i + 1]]) < BRIDGE_NODE_R + 2) return false;
         }
         for(j = i + 2; j < order.length - 1; j++){
           if(cross(P[order[i]], P[order[i + 1]], P[order[j]], P[order[j + 1]])) crossings++;
@@ -1545,9 +1547,9 @@
     status.innerHTML = 'Vigas encaixadas: <strong id="bridgeBeamsLabel">0</strong> de ' + totalBeams;
     wrap.appendChild(status);
 
-    var svg = svgEl("svg", { viewBox: "0 0 600 300", "class": "bridge-svg" });
-    svg.appendChild(svgEl("path", { d: "M0 290 Q50 278 100 290 T200 290 T300 290 T400 290 T500 290 T600 290 V300 H0Z M0 268 Q50 256 100 268 T200 268 T300 268 T400 268 T500 268 T600 268 V300 H0Z", "class": "bridge-water" }));
-    svg.appendChild(svgEl("path", { d: "M0 196 H86 L118 300 H0Z M600 196 H514 L482 300 H600Z", "class": "bridge-bank" }));
+    var svg = svgEl("svg", { viewBox: "0 0 600 330", "class": "bridge-svg" });
+    svg.appendChild(svgEl("path", { d: "M0 320 Q50 308 100 320 T200 320 T300 320 T400 320 T500 320 T600 320 V330 H0Z M0 298 Q50 286 100 298 T200 298 T300 298 T400 298 T500 298 T600 298 V330 H0Z", "class": "bridge-water" }));
+    svg.appendChild(svgEl("path", { d: "M0 226 H86 L118 330 H0Z M600 226 H514 L482 330 H600Z", "class": "bridge-bank" }));
 
     function line(a, b, cls){
       return svgEl("line", { x1: a.x, y1: a.y, x2: b.x, y2: b.y, pathLength: 1, "class": cls });
@@ -1596,8 +1598,8 @@
 
     puzzle.nodes.forEach(function(node, idx){
       var g = svgEl("g", { "class": "bridge-node", tabindex: 0, role: "button", "aria-label": "Nó com a conta " + node.expr });
-      g.appendChild(svgEl("circle", { cx: node.x, cy: node.y, r: 45 }));
-      var text = svgEl("text", { x: node.x, y: node.y + 7, "text-anchor": "middle" });
+      g.appendChild(svgEl("circle", { cx: node.x, cy: node.y, r: BRIDGE_NODE_R }));
+      var text = svgEl("text", { x: node.x, y: node.y + 10, "text-anchor": "middle" });
       text.textContent = node.expr;
       g.appendChild(text);
       g.addEventListener("click", function(){ onNode(idx); });
