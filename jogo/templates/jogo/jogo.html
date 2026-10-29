@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>O Código da Vinci — Matemática + Informática</title>
+<!-- adianta a conexão com o YouTube e a imagem do vídeo, para a abertura aparecer na hora do clique -->
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preload" as="image" href="https://i.ytimg.com/vi/L5oRntBYDis/maxresdefault.jpg">
 <link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=34">
-<link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=6">
+<link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=7">
 <link rel="stylesheet" href="{% static 'jogo/css/moldura.css' %}?v=4">
 </head>
 <body>
@@ -43,7 +47,7 @@
 
 <!-- VÍDEO DE ABERTURA (passa depois da capa, antes das regras) -->
 <section id="screen-video" class="video-abertura hidden" data-video="L5oRntBYDis">
-  <div class="video-quadro" id="videoQuadro"></div>
+  <div class="video-quadro" id="videoQuadro" style="background-image: url('https://i.ytimg.com/vi/L5oRntBYDis/maxresdefault.jpg')"></div>
   <button class="video-pular" id="btnPularVideo">Pular vídeo ▸</button>
 </section>
 
@@ -408,7 +412,7 @@
   </div>
 </div>
 
-<script src="{% static 'jogo/js/jogo.js' %}?v=42"></script>
+<script src="{% static 'jogo/js/jogo.js' %}?v=43"></script>
 
 </body>
 </html>

@@ -178,7 +178,8 @@ h1.title{
   /* 16:9, o maior que couber deixando espaço para o botão */
   width: min(100%, calc((100vh - 6vh - 90px) * 16 / 9));
   aspect-ratio: 16 / 9;
-  background: #000;
+  /* a imagem do vídeo (no style do HTML) aparece na hora, enquanto o YouTube carrega */
+  background: #000 center / cover no-repeat;
   border: 2px solid #5cc8ff;
   border-radius: 10px;
   overflow: hidden;
@@ -189,7 +190,10 @@ h1.title{
   width: 100%;
   height: 100%;
   border: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
 }
+.video-quadro iframe.pronto{ opacity: 1; }
 .video-pular{
   font-family: inherit;
   font-size: clamp(0.8rem, 1.4vw, 1.2rem);

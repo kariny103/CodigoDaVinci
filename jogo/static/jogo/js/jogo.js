@@ -2654,6 +2654,8 @@
     iframe.allow = "autoplay; encrypted-media; fullscreen";
     // sem isto o YouTube recusa o vídeo (erro 153), pois o Django envia Referrer-Policy: same-origin
     iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    // fica invisível sobre a imagem do vídeo até o player do YouTube terminar de carregar
+    iframe.addEventListener("load", function(){ iframe.classList.add("pronto"); });
     videoQuadro.appendChild(iframe);
     videoEl.classList.remove("hidden");
     document.getElementById("btnPularVideo").focus();
