@@ -953,11 +953,13 @@
 
   // ---------- Ponte autoportante de Leonardo (encaixar os troncos pelo resultado) ----------
   // encaixes na ordem de puzzle.slots: 4 troncos compridos e 2 troncos atravessados no alto
+  // (os círculos dos números são grandes, raio 38, então ficam bem espalhados pelos troncos)
+  var DAVINCI_BADGE_R = 38;
   var DAVINCI_SLOTS = [
-    { x1: 84, y1: 214, x2: 258, y2: 104, bx: 136, by: 181 },
-    { x1: 516, y1: 214, x2: 342, y2: 104, bx: 464, by: 181 },
-    { x1: 172, y1: 146, x2: 342, y2: 104, bx: 214, by: 136 },
-    { x1: 428, y1: 146, x2: 258, y2: 104, bx: 386, by: 136 },
+    { x1: 84, y1: 214, x2: 258, y2: 104, bx: 112, by: 196 },
+    { x1: 516, y1: 214, x2: 342, y2: 104, bx: 488, by: 196 },
+    { x1: 172, y1: 146, x2: 342, y2: 104, bx: 180, by: 144 },
+    { x1: 428, y1: 146, x2: 258, y2: 104, bx: 420, by: 144 },
     { cx: 258, cy: 98 },
     { cx: 342, cy: 98 }
   ];
@@ -1007,11 +1009,11 @@
         g.appendChild(svgEl("line", { x1: spec.x1, y1: spec.y1, x2: spec.x2, y2: spec.y2, "class": "dv-shape" }));
         bx = spec.bx; by = spec.by;
       } else {
-        g.appendChild(svgEl("circle", { cx: spec.cx, cy: spec.cy, r: 27, "class": "dv-shape dv-shape-ponta" }));
+        g.appendChild(svgEl("circle", { cx: spec.cx, cy: spec.cy, r: DAVINCI_BADGE_R + 3, "class": "dv-shape dv-shape-ponta" }));
         bx = spec.cx; by = spec.cy;
       }
-      g.appendChild(svgEl("circle", { cx: bx, cy: by, r: 24, "class": "dv-badge" }));
-      var text = svgEl("text", { x: bx, y: by + 8, "text-anchor": "middle", "class": "dv-badge-text" });
+      g.appendChild(svgEl("circle", { cx: bx, cy: by, r: DAVINCI_BADGE_R, "class": "dv-badge" }));
+      var text = svgEl("text", { x: bx, y: by + 12, "text-anchor": "middle", "class": "dv-badge-text" });
       text.textContent = String(value);
       g.appendChild(text);
       g.addEventListener("click", function(){ onSlot(j); });
@@ -1022,8 +1024,9 @@
       svg.appendChild(g);
     });
     // os troncos atravessados das pontas já vêm travados nas margens
-    svg.insertBefore(svgEl("circle", { cx: 172, cy: 152, r: 11, "class": "dv-fixo" }), slotEls[4]);
-    svg.insertBefore(svgEl("circle", { cx: 428, cy: 152, r: 11, "class": "dv-fixo" }), slotEls[4]);
+    // (desenhados por baixo, para não tamparem os números dos círculos grandes)
+    svg.insertBefore(svgEl("circle", { cx: 172, cy: 152, r: 11, "class": "dv-fixo" }), slotEls[0]);
+    svg.insertBefore(svgEl("circle", { cx: 428, cy: 152, r: 11, "class": "dv-fixo" }), slotEls[0]);
     wrap.appendChild(svg);
 
     var pile = document.createElement("div");
@@ -1053,12 +1056,28 @@
       showStatus();
     }
 
-    // um viajante atravessa a ponte pronta
+    // o próprio Leonardo da Vinci atravessa a ponte pronta (barba branca, boina e túnica)
     function crossBridge(){
       var walker = svgEl("g", { "class": "dv-walker" });
-      walker.appendChild(svgEl("circle", { cx: 0, cy: -27, r: 5 }));
-      walker.appendChild(svgEl("path", { d: "M0 -22V-9M0 -9L-5 0M0 -9L5 0M-6 -16L6 -18M6 -18V-34" }));
-      walker.appendChild(svgEl("path", { d: "M6 -34L17 -30L6 -26Z", "class": "dv-flag" }));
+      [
+        ["path", { d: "M-8 -56Q-11 -44 -7 -36L7 -36Q11 -44 8 -56Z", "class": "dv-leo-cabelo" }],
+        ["path", { d: "M-4 -14L-5 -2M4 -14L5 -2", "class": "dv-leo-perna" }],
+        ["ellipse", { cx: -6, cy: -1, rx: 4, ry: 2, "class": "dv-leo-sapato" }],
+        ["ellipse", { cx: 6, cy: -1, rx: 4, ry: 2, "class": "dv-leo-sapato" }],
+        ["path", { d: "M-7 -44L7 -44L13 -12Q0 -9 -13 -12Z", "class": "dv-leo-tunica" }],
+        ["path", { d: "M-9.5 -27H9.5", "class": "dv-leo-cinto" }],
+        ["path", { d: "M-7 -42L-12 -26", "class": "dv-leo-manga" }],
+        ["path", { d: "M7 -42L13 -31L16 -36", "class": "dv-leo-manga" }],
+        ["circle", { cx: -12, cy: -25, r: 2.2, "class": "dv-leo-pele" }],
+        ["rect", { x: 14, y: -45, width: 5, height: 13, rx: 2, "class": "dv-leo-rolo" }],
+        ["circle", { cx: 0, cy: -52, r: 7, "class": "dv-leo-pele" }],
+        ["path", { d: "M-6.5 -51Q-7.5 -40 -3 -33Q0 -29 3 -33Q7.5 -40 6.5 -51Q4 -46 0 -46Q-4 -46 -6.5 -51Z", "class": "dv-leo-barba" }],
+        ["path", { d: "M-3.5 -47Q0 -49.5 3.5 -47", "class": "dv-leo-bigode" }],
+        ["path", { d: "M-4 -55.5L-1 -55M1 -55L4 -55.5", "class": "dv-leo-sobrancelha" }],
+        ["circle", { cx: -2.5, cy: -53, r: 0.9, "class": "dv-leo-olho" }],
+        ["circle", { cx: 2.5, cy: -53, r: 0.9, "class": "dv-leo-olho" }],
+        ["path", { d: "M-8.5 -56Q-9 -62 0 -62.5Q9 -62 8.5 -56Q0 -58 -8.5 -56Z", "class": "dv-leo-boina" }]
+      ].forEach(function(p){ walker.appendChild(svgEl(p[0], p[1])); });
       var motion = svgEl("animateMotion", { dur: "5s", fill: "freeze", begin: "indefinite", path: "M20 208L84 208Q300 -34 516 208L570 208" });
       walker.appendChild(motion);
       walker.setAttribute("transform", "translate(20 208)");
