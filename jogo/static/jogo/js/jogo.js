@@ -494,42 +494,27 @@
       totalPairs: MEMORY_KEYS.length
     };
   }
-  // Jogo dos erros da Santa Ceia: a cópia de um aprendiz tem 5 diferenças em relação ao original.
-  // Coordenadas num quadro de 960 x 480 (a imagem ceia-desenho.jpg é esticada para esse tamanho). Cada diferença é um desenho por cima da
-  // cópia; "{IMG}" vira o endereço da imagem, para recortar pedaços da própria pintura.
-  var CEIA_DIFERENCAS = [
-    { nome: "o manto vermelho de Jesus ficou verde", x: 452, y: 290, r: 50,
-      svg: '<g clip-path="url(#cc-manto)" filter="url(#cc-verde)"><image href="{IMG}" width="960" height="480"/></g>' },
-    { nome: "a tapeçaria da esquerda ficou azul", x: 55, y: 125, r: 65,
-      svg: '<g clip-path="url(#cc-tapete)" filter="url(#cc-azul)"><image href="{IMG}" width="960" height="480"/></g>' },
-    { nome: "a janela da direita sumiu", x: 577, y: 218, r: 45,
-      svg: '<g clip-path="url(#cc-janela)"><image href="{IMG}" x="-44" width="960" height="480"/></g>' },
-    { nome: "apareceu um cálice dourado na mesa", x: 712, y: 312, r: 45,
-      svg: '<g transform="translate(712 312)"><path d="M-13 -20H13C13 -6 7 0 0 1C-7 0 -13 -6 -13 -20Z" fill="#ffd24a" stroke="#6a461a" stroke-width="2"/>' +
-        '<path d="M-2 1V14M-10 18H10" stroke="#e6b830" stroke-width="5" stroke-linecap="round"/><path d="M-8 -16H6" stroke="#fff3c4" stroke-width="2.5" stroke-linecap="round"/></g>' },
-    { nome: "a porta ganhou tábuas e uma maçaneta", x: 486, y: 432, r: 55,
-      svg: '<g clip-path="url(#cc-porta)"><rect x="380" y="385" width="215" height="95" fill="#6a3f1c"/>' +
-        '<path d="M410 385V480M440 385V480M470 385V480M500 385V480M530 385V480M560 385V480" stroke="#3e220c" stroke-width="3"/>' +
-        '<circle cx="545" cy="435" r="7" fill="#ffd24a" stroke="#6a461a" stroke-width="2"/></g>' },
-    { nome: "Jesus ganhou uma auréola dourada", x: 481, y: 228, r: 45,
-      svg: '<circle cx="481" cy="226" r="31" fill="none" stroke="#ffd24a" stroke-width="5" opacity="0.9" filter="url(#cc-brilho)"/>' },
-    { nome: "apareceu um lustre pendurado no teto", x: 480, y: 70, r: 50,
-      svg: '<path d="M480 0V58" stroke="#2a1a0e" stroke-width="3"/><path d="M450 70Q480 92 510 70Z" fill="#c9a35a" stroke="#6a461a" stroke-width="2"/>' +
-        '<path d="M454 70V58M480 74V58M506 70V58" stroke="#f3ead2" stroke-width="5"/>' +
-        '<path d="M454 47C458 53 457 57 454 57C451 57 450 53 454 47ZM480 47C484 53 483 57 480 57C477 57 476 53 480 47ZM506 47C510 53 509 57 506 57C503 57 502 53 506 47Z" fill="#ffab3d"/>' },
-    { nome: "um gato está escondido embaixo da mesa", x: 800, y: 440, r: 45,
-      svg: '<g transform="translate(800 446)" fill="#141018"><ellipse cx="0" cy="10" rx="16" ry="20"/><circle cx="0" cy="-16" r="11"/>' +
-        '<path d="M-10 -22L-8 -36L-2 -26ZM10 -22L8 -36L2 -26Z"/><path d="M14 22C30 22 30 4 22 0" fill="none" stroke="#141018" stroke-width="5" stroke-linecap="round"/>' +
-        '<circle cx="-4" cy="-17" r="2" fill="#ffd24a"/><circle cx="4" cy="-17" r="2" fill="#ffd24a"/></g>' }
+  // Jogo dos erros na oficina de Leonardo: a cópia de um aprendiz tem 5 diferenças em relação
+  // ao desenho original. x, y e r marcam onde clicar, num quadro de 960 x 480.
+  var OFICINA_DIFERENCAS = [
+    { key: "lua", nome: "o sol da janela virou lua", x: 440, y: 110, r: 34 },
+    { key: "asa", nome: "a máquina voadora perdeu uma asa", x: 250, y: 82, r: 50 },
+    { key: "livro", nome: "sumiu o livro vermelho da estante", x: 108, y: 176, r: 34 },
+    { key: "quadrado", nome: "o desenho do Homem Vitruviano perdeu o quadrado", x: 845, y: 140, r: 52 },
+    { key: "vestido", nome: "o vestido da Mona Lisa ficou vermelho", x: 645, y: 218, r: 40 },
+    { key: "paleta", nome: "a paleta perdeu as tintas azul e verde", x: 770, y: 330, r: 38 },
+    { key: "engrenagem", nome: "a engrenagem grande ficou azul", x: 870, y: 372, r: 56 },
+    { key: "martelo", nome: "o martelo sumiu da bancada", x: 112, y: 276, r: 36 },
+    { key: "vela", nome: "a vela da bancada apagou", x: 470, y: 246, r: 36 },
+    { key: "gato", nome: "apareceu um gato dormindo embaixo da bancada", x: 300, y: 416, r: 42 }
   ];
-  var CEIA_QTD = 5;
+  var OFICINA_QTD = 5;
   function genR3P2(rng){
-    var escolhidas = shuffle(rng, CEIA_DIFERENCAS.map(function(d, i){ return i; })).slice(0, CEIA_QTD);
-    var difs = escolhidas.map(function(i){ return CEIA_DIFERENCAS[i]; });
+    var difs = shuffle(rng, OFICINA_DIFERENCAS.slice()).slice(0, OFICINA_QTD);
     return {
-      type: "ceia",
-      question: "Um aprendiz de Leonardo tentou copiar a Santa Ceia, mas se distraiu e cometeu 5 erros. Compare a pintura original (em cima) com a cópia (embaixo) e clique em cada diferença que encontrar.",
-      hint: "Olhe com calma o teto, as janelas, as tapeçarias, a mesa, a porta e as roupas. As diferenças são: " +
+      type: "oficina",
+      question: "Um aprendiz tentou desenhar a oficina de Leonardo, mas se distraiu e cometeu 5 erros. Compare o desenho original (em cima) com a cópia (embaixo) e clique em cada diferença que encontrar.",
+      hint: "Olhe com calma a janela, o teto, a estante, o cavalete, a parede, a bancada e o chão. As diferenças são: " +
         difs.map(function(d){ return d.nome; }).join("; ") + ".",
       difs: difs
     };
@@ -1851,63 +1836,174 @@
     '<path d="M18 220V92A132 132 0 0 1 282 92V220" fill="none" stroke="#8c6d46" stroke-width="6"/>' +
     '<path d="M40 40L62 70L55 96M250 150L236 176L246 204M120 30L134 52" fill="none" stroke="rgba(90,60,30,0.4)" stroke-width="1.2"/>';
 
-  // ---------- A Santa Ceia: jogo dos erros entre o original e a cópia ----------
-  function renderCeia(puzzle){
+  // ---------- Oficina de Leonardo: jogo dos erros entre o original e a cópia ----------
+  // Desenha a oficina num quadro de 960 x 480. "m" diz quais diferenças a cópia tem (m.lua, m.asa...).
+  function oficinaSvg(m){
+    var s = "";
+    // parede de pedra, teto com vigas e chão de tábuas
+    s += '<rect width="960" height="480" fill="#e2c595"/>';
+    var pedras = "";
+    for(var y = 34, linha = 0; y < 330; y += 42, linha++){
+      pedras += "M0 " + y + "H960";
+      for(var x = (linha % 2) * 60; x < 960; x += 120) pedras += "M" + x + " " + y + "V" + Math.min(y + 42, 330);
+    }
+    s += '<path d="' + pedras + '" stroke="#b8925c" stroke-width="2" opacity="0.55"/>';
+    s += '<rect width="960" height="36" fill="#4a2a10"/>';
+    for(var v = 20; v < 960; v += 130) s += '<rect x="' + v + '" y="0" width="26" height="48" rx="3" fill="#6e4220" stroke="#3a2008" stroke-width="2"/>';
+    s += '<rect y="330" width="960" height="150" fill="#9a5f2c"/>' +
+      '<path d="M0 330H960M0 368H960M0 410H960M0 452H960M140 330V368M420 330V368M700 330V368M60 368V410M330 368V410M610 368V410M880 368V410M200 410V452M480 410V452M760 410V452M90 452V480M380 452V480M650 452V480" stroke="#6e3f18" stroke-width="3"/>' +
+      '<rect y="326" width="960" height="8" fill="#5a3518"/>';
+
+    // janela em arco com Florença ao fundo
+    s += '<path d="M330 232V120A70 70 0 0 1 470 120V232Z" fill="#9fd3f0"/>';
+    if(m.lua){
+      s += '<circle cx="440" cy="110" r="17" fill="#f3ead2"/><circle cx="447" cy="104" r="15" fill="#9fd3f0"/>';
+    } else {
+      s += '<circle cx="440" cy="110" r="17" fill="#ffd24a"/><circle cx="440" cy="110" r="24" fill="none" stroke="#ffd24a" stroke-width="3" stroke-dasharray="4 6"/>';
+    }
+    s += '<path d="M330 205Q370 180 410 200T470 192V232H330Z" fill="#6aa84f"/>' +
+      '<path d="M330 218Q380 205 430 218T470 214V232H330Z" fill="#4c8a3a"/>' +
+      '<rect x="348" y="192" width="14" height="16" fill="#f3ead2"/><path d="M346 193L355 185L364 193Z" fill="#c0502e"/>' +
+      '<rect x="436" y="196" width="16" height="14" fill="#f3ead2"/><path d="M434 197L444 189L454 197Z" fill="#c0502e"/>' +
+      '<rect x="384" y="178" width="34" height="22" fill="#f3ead2"/>' +
+      '<path d="M380 180Q401 138 422 180Z" fill="#c0502e"/><path d="M401 148V180M391 160L388 180M411 160L414 180" stroke="#8a3218" stroke-width="2"/>' +
+      '<rect x="398" y="136" width="6" height="12" fill="#f3ead2"/>' +
+      '<path d="M330 232V120A70 70 0 0 1 470 120V232Z" fill="none" stroke="#5a3518" stroke-width="10"/>' +
+      '<rect x="318" y="230" width="164" height="12" rx="2" fill="#6e4220"/>';
+
+    // máquina voadora pendurada no teto
+    s += '<path d="M130 36L150 70M190 36L170 70" stroke="#3a2008" stroke-width="2"/>' +
+      '<path d="M148 80C110 48 70 52 38 80C76 76 112 88 148 96Z" fill="#f3e6c2" stroke="#5a3518" stroke-width="2.5"/>' +
+      '<path d="M148 84L60 70M148 84L84 62M148 84L112 58" stroke="#8c6d46" stroke-width="2"/>';
+    if(m.asa){
+      s += '<path d="M172 84L186 80" stroke="#5a3518" stroke-width="4" stroke-linecap="round"/>';
+    } else {
+      s += '<path d="M172 80C210 48 250 52 282 80C244 76 208 88 172 96Z" fill="#f3e6c2" stroke="#5a3518" stroke-width="2.5"/>' +
+        '<path d="M172 84L260 70M172 84L236 62M172 84L208 58" stroke="#8c6d46" stroke-width="2"/>';
+    }
+    s += '<ellipse cx="160" cy="88" rx="13" ry="24" fill="#8a5a2b" stroke="#3a2008" stroke-width="2"/>';
+
+    // estante com livros e um pote
+    s += '<rect x="28" y="200" width="196" height="10" fill="#6e4220"/><path d="M44 210L56 226M208 210L196 226" stroke="#4a2a10" stroke-width="5"/>';
+    var livros = [[40, 46, "#2f5d8b"], [56, 40, "#3f7a4a"], [70, 50, "#8b6a2f"], [86, 44, "#5b3f8b"],
+      [100, 52, m.livro ? null : "#b3261e"], [118, 42, "#2f5d8b"], [132, 48, "#3f7a4a"]];
+    livros.forEach(function(l){
+      if(l[2]) s += '<rect x="' + l[0] + '" y="' + (200 - l[1]) + '" width="13" height="' + l[1] + '" fill="' + l[2] + '" stroke="#1a1008" stroke-width="1.5"/>' +
+        '<path d="M' + (l[0] + 2) + " " + (206 - l[1]) + "H" + (l[0] + 11) + '" stroke="#ffd24a" stroke-width="2"/>';
+    });
+    s += '<path d="M160 200V170Q160 162 168 162H192Q200 162 200 170V200Z" fill="#6fa8b8" opacity="0.85" stroke="#2a4a58" stroke-width="2"/>' +
+      '<rect x="164" y="154" width="32" height="9" rx="2" fill="#8a5a2b"/>';
+
+    // serrote pendurado na parede
+    s += '<path d="M505 70V84" stroke="#3a2008" stroke-width="2"/><rect x="496" y="84" width="18" height="24" rx="5" fill="#8a5a2b" stroke="#3a2008" stroke-width="2"/>' +
+      '<path d="M498 108H512L516 196L494 196Z" fill="#cfd4dc" stroke="#5a5f6a" stroke-width="2"/>' +
+      '<path d="M494 196L497 190L500 196L503 190L506 196L509 190L512 196L515 190" fill="none" stroke="#5a5f6a" stroke-width="1.5"/>';
+
+    // cavalete com a Mona Lisa
+    s += '<path d="M598 420L640 92M704 420L662 92M651 420V100" stroke="#6e4220" stroke-width="8" stroke-linecap="round"/>' +
+      '<rect x="580" y="256" width="134" height="10" rx="2" fill="#5a3518"/>' +
+      '<rect x="585" y="104" width="122" height="152" fill="#c9a35a" stroke="#6a461a" stroke-width="3"/>' +
+      '<rect x="594" y="113" width="104" height="134" fill="#7d8f5a"/><rect x="594" y="113" width="104" height="40" fill="#a9c0a0"/>' +
+      '<path d="M594 150Q620 140 646 152T698 146V170H594Z" fill="#5e7a48"/>' +
+      '<path d="M624 196Q622 140 646 136Q670 140 668 196Z" fill="#3a2410"/>' +
+      '<ellipse cx="646" cy="164" rx="15" ry="19" fill="#e9c89a"/>' +
+      '<path d="M640 158h3M650 158h3" stroke="#3a2410" stroke-width="2" stroke-linecap="round"/><path d="M641 172Q646 175 651 172" fill="none" stroke="#8a4a2a" stroke-width="1.8"/>' +
+      '<path d="M612 247Q614 198 646 192Q678 198 680 247Z" fill="' + (m.vestido ? "#c42a2a" : "#4a3018") + '"/>' +
+      '<ellipse cx="646" cy="230" rx="16" ry="7" fill="#e9c89a"/>';
+
+    // esboço do Homem Vitruviano preso na parede
+    s += '<g transform="rotate(3 845 135)"><rect x="788" y="68" width="114" height="134" fill="#f3e6c2" stroke="#8c6d46" stroke-width="2.5"/>' +
+      '<circle cx="845" cy="140" r="44" fill="none" stroke="#7a4a20" stroke-width="2.5"/>' +
+      (m.quadrado ? "" : '<rect x="809" y="110" width="72" height="72" fill="none" stroke="#7a4a20" stroke-width="2.5"/>') +
+      '<circle cx="845" cy="112" r="7" fill="none" stroke="#7a4a20" stroke-width="2.5"/>' +
+      '<path d="M845 119V156M812 130H878M845 156L828 182M845 156L862 182M845 156L816 176M845 156L874 176M845 126L816 112M845 126L874 112" stroke="#7a4a20" stroke-width="2.5" stroke-linecap="round"/>' +
+      '<circle cx="845" cy="74" r="5" fill="#b3261e"/></g>';
+
+    // banquinho com a paleta de tintas
+    s += '<path d="M748 342L740 420M792 342L800 420M770 344V420" stroke="#6e4220" stroke-width="7" stroke-linecap="round"/>' +
+      '<ellipse cx="770" cy="340" rx="34" ry="9" fill="#8a5a2b" stroke="#4a2a10" stroke-width="2"/>' +
+      '<path d="M738 330C738 316 800 312 806 326C810 340 790 342 776 338C766 336 770 344 760 344C744 344 738 340 738 330Z" fill="#e0bb7e" stroke="#8a5a2b" stroke-width="2"/>' +
+      '<circle cx="752" cy="327" r="5" fill="#d92b2b"/><circle cx="766" cy="322" r="5" fill="#f2d13a"/>' +
+      (m.paleta ? "" : '<circle cx="781" cy="322" r="5" fill="#2a5fb8"/><circle cx="794" cy="328" r="5" fill="#2f9a4a"/>') +
+      '<circle cx="756" cy="337" r="4" fill="#ffffff"/>';
+
+    // engrenagem grande encostada na parede
+    var cor = m.engrenagem ? "#4f86c6" : "#c9a35a", escura = m.engrenagem ? "#1f3f6a" : "#6a461a";
+    s += '<circle cx="870" cy="372" r="50" fill="none" stroke="' + cor + '" stroke-width="16" stroke-dasharray="13 13"/>' +
+      '<circle cx="870" cy="372" r="44" fill="' + cor + '" stroke="' + escura + '" stroke-width="3"/>' +
+      '<circle cx="870" cy="372" r="28" fill="#e2c595" stroke="' + escura + '" stroke-width="3"/>' +
+      '<path d="M870 344V400M842 372H898M850 352L890 392M890 352L850 392" stroke="' + cor + '" stroke-width="7"/>' +
+      '<circle cx="870" cy="372" r="9" fill="' + escura + '"/>';
+
+    // bancada com ferramentas
+    s += '<rect x="58" y="304" width="16" height="126" fill="#5a3518"/><rect x="474" y="304" width="16" height="126" fill="#5a3518"/>' +
+      '<rect x="58" y="398" width="432" height="9" fill="#5a3518"/>' +
+      '<rect x="40" y="290" width="470" height="16" rx="2" fill="#7a4a20" stroke="#4a2a10" stroke-width="2"/>' +
+      '<rect x="50" y="306" width="450" height="14" fill="#6a3e1a"/>';
+    if(!m.martelo){
+      s += '<g transform="rotate(-20 112 280)"><rect x="80" y="276" width="56" height="8" rx="3" fill="#a0642e" stroke="#4a2a10" stroke-width="1.5"/>' +
+        '<rect x="128" y="264" width="14" height="30" rx="2" fill="#7d838e" stroke="#3a3f48" stroke-width="2"/></g>';
+    }
+    s += '<rect x="168" y="272" width="62" height="18" rx="9" fill="#f0deb0" stroke="#8c6d46" stroke-width="2"/><ellipse cx="174" cy="281" rx="5" ry="9" fill="#e2c88f" stroke="#8c6d46" stroke-width="1.5"/>' +
+      '<path d="M268 252L256 288M268 252L280 288M261 274H275" stroke="#c9a35a" stroke-width="3" stroke-linecap="round"/><circle cx="268" cy="252" r="4" fill="#6a461a"/>' +
+      '<circle cx="330" cy="274" r="13" fill="none" stroke="#c9a35a" stroke-width="7" stroke-dasharray="5 4"/><circle cx="330" cy="274" r="9" fill="#c9a35a"/><circle cx="330" cy="274" r="3" fill="#4a2a10"/>' +
+      '<path d="M370 288L376 268H410L404 288ZM410 268L444 268L438 288H404Z" fill="#f3ead2" stroke="#8c6d46" stroke-width="2"/><path d="M382 276H400M414 276H432" stroke="#8c6d46" stroke-width="1.5"/>' +
+      '<rect x="455" y="284" width="30" height="6" rx="2" fill="#c9a35a"/><rect x="464" y="250" width="12" height="34" fill="#f3ead2" stroke="#8c6d46" stroke-width="1.5"/>';
+    if(m.vela){
+      s += '<path d="M470 248Q464 238 472 230Q478 222 472 214" fill="none" stroke="#9a9a9a" stroke-width="2" opacity="0.8"/>';
+    } else {
+      s += '<circle cx="470" cy="236" r="16" fill="#ffd24a" opacity="0.3"/><path d="M470 222C477 232 476 244 470 246C464 244 463 232 470 222Z" fill="#ffab3d"/><path d="M470 232C473 237 472 243 470 244C468 243 467 237 470 232Z" fill="#fff3c4"/>';
+    }
+    // caixote e papéis no chão
+    s += '<rect x="96" y="352" width="70" height="50" fill="#a0642e" stroke="#4a2a10" stroke-width="2.5"/><path d="M96 377H166M110 352V402M152 352V402" stroke="#6e3f18" stroke-width="2"/>' +
+      '<g transform="rotate(-8 585 450)"><rect x="560" y="438" width="52" height="30" fill="#f3e6c2" stroke="#8c6d46" stroke-width="2"/><path d="M566 448H604M566 456H596" stroke="#8c6d46" stroke-width="1.5"/></g>';
+    if(m.gato){
+      s += '<g transform="translate(300 420)" fill="#2a2030"><ellipse cx="0" cy="4" rx="30" ry="14"/><circle cx="-26" cy="-4" r="11"/>' +
+        '<path d="M-34 -10L-36 -22L-28 -13ZM-22 -12L-18 -23L-15 -11Z"/><path d="M28 6C40 8 40 -6 30 -8" fill="none" stroke="#2a2030" stroke-width="6" stroke-linecap="round"/>' +
+        '<path d="M-31 -5H-26M-23 -5H-18" stroke="#ffd24a" stroke-width="1.6" stroke-linecap="round"/></g>';
+    }
+    return s;
+  }
+
+  function renderOficina(puzzle){
     puzzle._achadas = 0;
     puzzle._achadasIdx = {}; // posições em puzzle.difs já encontradas nesta partida
     var total = puzzle.difs.length;
-    // versão em desenho, com cores mais fortes para o telão
-    var img = OBRAS_URL + "ceia-desenho.jpg";
+    var muda = {};
+    puzzle.difs.forEach(function(d){ muda[d.key] = true; });
     var wrap = document.createElement("div");
-    wrap.className = "ceia-wrap";
+    wrap.className = "oficina-wrap";
 
     var placar = document.createElement("div");
-    placar.className = "ceia-placar";
+    placar.className = "oficina-placar";
     wrap.appendChild(placar);
     function atualizarPlacar(){
       var bolinhas = "";
       for(var i = 0; i < total; i++){
-        bolinhas += '<span class="ceia-bolinha' + (i < puzzle._achadas ? " achada" : "") + '"></span>';
+        bolinhas += '<span class="oficina-bolinha' + (i < puzzle._achadas ? " achada" : "") + '"></span>';
       }
       placar.innerHTML = "Diferenças encontradas: <strong>" + puzzle._achadas + " de " + total + "</strong>" +
-        '<span class="ceia-bolinhas">' + bolinhas + "</span>";
+        '<span class="oficina-bolinhas">' + bolinhas + "</span>";
     }
     atualizarPlacar();
 
-    // recortes e filtros usados pelos desenhos das diferenças
-    var defs = '<defs>' +
-      '<clipPath id="cc-manto"><ellipse cx="452" cy="290" rx="32" ry="40"/></clipPath>' +
-      '<clipPath id="cc-tapete"><rect x="0" y="22" width="108" height="205"/></clipPath>' +
-      '<clipPath id="cc-janela"><rect x="555" y="182" width="45" height="72"/></clipPath>' +
-      '<clipPath id="cc-porta"><path d="M378 480V400Q486 368 594 400V480Z"/></clipPath>' +
-      '<filter id="cc-verde"><feColorMatrix type="hueRotate" values="110"/></filter>' +
-      '<filter id="cc-azul"><feColorMatrix type="hueRotate" values="200"/></filter>' +
-      '<filter id="cc-brilho"><feGaussianBlur stdDeviation="1.5"/></filter>' +
-    '</defs>';
-    function quadro(rotulo, copia){
+    function quadro(rotulo, desenho){
       var fig = document.createElement("figure");
-      fig.className = "ceia-quadro";
-      var html = '<svg viewBox="0 0 960 480" class="ceia-svg" role="img" aria-label="' + rotulo + '">' +
-        (copia ? defs : "") + '<image href="' + img + '" width="960" height="480"/>';
-      if(copia){
-        puzzle.difs.forEach(function(d){ html += d.svg.split("{IMG}").join(img); });
-      }
-      html += '<g class="ceia-marcas"></g></svg>';
-      fig.innerHTML = html + '<figcaption>' + rotulo + '</figcaption>';
+      fig.className = "oficina-quadro";
+      fig.innerHTML = '<svg viewBox="0 0 960 480" class="oficina-svg" role="img" aria-label="' + rotulo + '">' +
+        desenho + '<g class="oficina-marcas"></g></svg><figcaption>' + rotulo + '</figcaption>';
       wrap.appendChild(fig);
       return fig.querySelector("svg");
     }
-    var svgs = [quadro("Original de Leonardo", false), quadro("Cópia do aprendiz", true)];
+    var svgs = [quadro("Desenho original", oficinaSvg({})), quadro("Cópia do aprendiz", oficinaSvg(muda))];
 
-    function marcar(svg, d, classe){
-      var c = svgEl("circle", { cx: d.x, cy: d.y, r: d.r, "class": classe });
-      svg.querySelector(".ceia-marcas").appendChild(c);
-      return c;
+    function marcar(svg, d){
+      svg.querySelector(".oficina-marcas").appendChild(svgEl("circle", { cx: d.x, cy: d.y, r: d.r, "class": "oficina-achada" }));
     }
     function errou(svg, x, y){
-      var g = svgEl("g", { "class": "ceia-xis", transform: "translate(" + x + " " + y + ")" });
+      var g = svgEl("g", { "class": "oficina-xis", transform: "translate(" + x + " " + y + ")" });
       g.appendChild(svgEl("path", { d: "M-16 -16L16 16M16 -16L-16 16" }));
-      svg.querySelector(".ceia-marcas").appendChild(g);
+      svg.querySelector(".oficina-marcas").appendChild(g);
       setTimeout(function(){ g.remove(); }, 700);
     }
 
@@ -1927,12 +2023,12 @@
         if(!achou && repetida) return; // clicou de novo numa diferença já marcada
         if(!achou){
           errou(svg, pt.x, pt.y);
-          feedbackEl.textContent = "Aí não tem diferença. Compare as duas pinturas com atenção!";
+          feedbackEl.textContent = "Aí não tem diferença. Compare os dois desenhos com atenção!";
           feedbackEl.className = "feedback err";
           return;
         }
         puzzle._achadas++;
-        svgs.forEach(function(s){ marcar(s, achou, "ceia-achada"); });
+        svgs.forEach(function(sv){ marcar(sv, achou); });
         atualizarPlacar();
         if(puzzle._achadas >= total){
           feedbackEl.textContent = "Você achou os " + total + " erros do aprendiz! Clique em Verificar para continuar.";
@@ -2309,7 +2405,7 @@
     else if(puzzle.type === "bridge") renderBridge(puzzle);
     else if(puzzle.type === "scale") renderScale(puzzle);
     else if(puzzle.type === "mirror") renderMirror(puzzle);
-    else if(puzzle.type === "ceia") renderCeia(puzzle);
+    else if(puzzle.type === "oficina") renderOficina(puzzle);
     else if(puzzle.type === "perspective") renderPerspective(puzzle);
     else if(puzzle.type === "study") renderStudy(puzzle);
     else if(puzzle.type === "davinci") renderDavinci(puzzle);
@@ -2375,7 +2471,7 @@
       if((puzzle._step || 0) < 2) return null;
       return true;
     }
-    if(puzzle.type === "ceia"){
+    if(puzzle.type === "oficina"){
       return puzzle._achadas >= puzzle.difs.length ? true : null;
     }
     if(puzzle.type === "mirror"){
@@ -2443,7 +2539,7 @@
         feedbackEl.textContent = "Correto! As roletas travam e o cofre se abre...";
         delay = 1500;
       }
-      if(puzzle.type === "ceia"){
+      if(puzzle.type === "oficina"){
         feedbackEl.textContent = "Correto! Nenhum erro do aprendiz escapou do seu olhar de Leonardo...";
         delay = 1500;
       }

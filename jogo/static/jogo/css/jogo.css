@@ -1132,15 +1132,15 @@ ul.rules li{ margin-bottom: 6px; }
   .mirror-sheet{ transition: none; }
 }
 
-/* ---------- A Santa Ceia: jogo dos erros ---------- */
-.ceia-wrap{
+/* ---------- Oficina de Leonardo: jogo dos erros ---------- */
+.oficina-wrap{
   display:flex;
   flex-direction:column;
   align-items:center;
   gap: 12px;
   margin: 4px auto 10px;
 }
-.ceia-placar{
+.oficina-placar{
   display:flex;
   flex-wrap: wrap;
   align-items:center;
@@ -1155,21 +1155,21 @@ ul.rules li{ margin-bottom: 6px; }
   font-size: 1.05rem;
   font-weight: bold;
 }
-.ceia-placar strong{ color: var(--verdigris); }
-.ceia-bolinhas{ display:flex; gap: 6px; }
-.ceia-bolinha{
+.oficina-placar strong{ color: var(--verdigris); }
+.oficina-bolinhas{ display:flex; gap: 6px; }
+.oficina-bolinha{
   width: 16px;
   height: 16px;
   border-radius: 50%;
   border: 2.5px solid var(--gold);
 }
-.ceia-bolinha.achada{ background: #5dff9b; border-color: #5dff9b; box-shadow: 0 0 8px #5dff9b; }
-.ceia-quadro{
+.oficina-bolinha.achada{ background: #5dff9b; border-color: #5dff9b; box-shadow: 0 0 8px #5dff9b; }
+.oficina-quadro{
   width: 100%;
   max-width: 660px;
   margin: 0;
 }
-.ceia-quadro figcaption{
+.oficina-quadro figcaption{
   margin-top: 4px;
   font-family: var(--display);
   font-size: 0.85rem;
@@ -1179,7 +1179,7 @@ ul.rules li{ margin-bottom: 6px; }
   text-align: center;
   color: var(--gold-bright);
 }
-.ceia-svg{
+.oficina-svg{
   display:block;
   width: 100%;
   height: auto;
@@ -1188,25 +1188,25 @@ ul.rules li{ margin-bottom: 6px; }
   border-radius: 4px;
   box-shadow: 0 8px 18px rgba(0,0,0,0.6);
 }
-.ceia-wrap.completo .ceia-svg{ border-color: #5dff9b; cursor: default; }
-.ceia-achada{
+.oficina-wrap.completo .oficina-svg{ border-color: #5dff9b; cursor: default; }
+.oficina-achada{
   fill: rgba(93,255,155,0.12);
   stroke: #5dff9b;
   stroke-width: 6;
   filter: drop-shadow(0 0 4px #000);
-  animation: ceia-pop 0.35s ease-out both;
+  animation: oficina-pop 0.35s ease-out both;
   transform-box: fill-box;
   transform-origin: center;
 }
-@keyframes ceia-pop{ from{ transform: scale(1.6); opacity: 0; } to{ transform: none; opacity: 1; } }
-.ceia-xis path{
+@keyframes oficina-pop{ from{ transform: scale(1.6); opacity: 0; } to{ transform: none; opacity: 1; } }
+.oficina-xis path{
   stroke: #ff3b3b;
   stroke-width: 8;
   stroke-linecap: round;
   filter: drop-shadow(0 0 3px #000);
 }
 @media (prefers-reduced-motion: reduce){
-  .ceia-achada{ animation: none; }
+  .oficina-achada{ animation: none; }
 }
 
 /* ---------- Perspectiva: ponto de fuga na oficina ---------- */
@@ -1993,6 +1993,7 @@ ul.rules li{ margin-bottom: 6px; }
   .portrait-frame{ width: min(200px, 55vw); }
   /* pontes: o desenho usa a largura toda do cartão e os círculos com números ficam bem maiores */
   .bridge-svg, .dv-svg{ width: calc(100% + 24px); max-width: none; margin: 0 -12px; }
+  .oficina-quadro{ width: calc(100% + 24px); max-width: none; margin: 0 -12px; }
   .bridge-node circle{ r: 56px; }
   .bridge-node text{ font-size: 27px; }
   .dv-badge{ r: 29px; }
