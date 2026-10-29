@@ -102,6 +102,16 @@ h1.title{
 }
 .capa-sub b{ color: #ff9be9; padding: 0 0.25em; }
 
+/* crédito do trabalho, entre o subtítulo e o botão */
+.capa-autoria{
+  margin: -0.4em 0 1.6em;
+  font-size: clamp(0.85rem, 1.5vw, 1.4rem);
+  line-height: 1.35;
+  color: #eaf8ff;
+  text-shadow: 0 0 10px rgba(166,120,255,0.7);
+}
+.capa-autoria b{ color: #ffd24a; white-space: nowrap; }
+
 .capa-btn{
   font-family: inherit;
   font-size: clamp(0.8rem, 1.7vw, 1.5rem);
@@ -206,6 +216,7 @@ h1.title{
   .capa-arte{ display: none; }
   .capa-titulo{ font-size: clamp(2.2rem, 15vw, 5rem); }
   .capa-sub{ font-size: clamp(0.75rem, 4vw, 1.2rem); }
+  .capa-autoria{ font-size: clamp(0.8rem, 4vw, 1.1rem); }
   .capa-btn{ font-size: clamp(0.8rem, 4vw, 1.1rem); }
 }
 

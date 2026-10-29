@@ -441,13 +441,21 @@
       slots: shuffle(rng, pieces.map(function(p){ return p.answer; }))
     };
   }
-  var MEMORY_ICONS = {
-    monalisa: '<svg viewBox="0 0 100 100"><rect x="15" y="8" width="70" height="84" rx="4" fill="none" stroke="#a678ff" stroke-width="4"/><circle cx="50" cy="42" r="14" fill="none" stroke="#a678ff" stroke-width="4"/><path d="M28,82 C28,62 38,56 50,56 C62,56 72,62 72,82" fill="none" stroke="#a678ff" stroke-width="4"/></svg>',
-    vitruvio: '<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="40" fill="none" stroke="#a678ff" stroke-width="3"/><rect x="15" y="17" width="70" height="70" fill="none" stroke="#a678ff" stroke-width="3"/><circle cx="50" cy="24" r="7" fill="none" stroke="#a678ff" stroke-width="3"/><path d="M50,31 L50,72 M18,42 L82,42 M22,22 L50,31 M78,22 L50,31 M50,72 L26,94 M50,72 L74,94" fill="none" stroke="#a678ff" stroke-width="3" stroke-linecap="round"/></svg>',
-    ceia: '<svg viewBox="0 0 100 100"><rect x="8" y="62" width="84" height="6" fill="#a678ff"/><line x1="14" y1="68" x2="14" y2="86" stroke="#a678ff" stroke-width="4"/><line x1="86" y1="68" x2="86" y2="86" stroke="#a678ff" stroke-width="4"/><circle cx="18" cy="42" r="8" fill="none" stroke="#a678ff" stroke-width="3"/><circle cx="36" cy="39" r="8" fill="none" stroke="#a678ff" stroke-width="3"/><circle cx="50" cy="34" r="10" fill="none" stroke="#a678ff" stroke-width="3.5"/><circle cx="64" cy="39" r="8" fill="none" stroke="#a678ff" stroke-width="3"/><circle cx="82" cy="42" r="8" fill="none" stroke="#a678ff" stroke-width="3"/></svg>',
-    maquina: '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="52" rx="9" ry="17" fill="none" stroke="#a678ff" stroke-width="3"/><path d="M50,42 C32,24 12,28 6,42 C22,40 36,44 50,52" fill="none" stroke="#a678ff" stroke-width="3"/><path d="M50,42 C68,24 88,28 94,42 C78,40 64,44 50,52" fill="none" stroke="#a678ff" stroke-width="3"/><path d="M50,62 C36,76 22,79 16,70" fill="none" stroke="#a678ff" stroke-width="3"/><path d="M50,62 C64,76 78,79 84,70" fill="none" stroke="#a678ff" stroke-width="3"/></svg>'
-  };
-  var MEMORY_ICON_KEYS = ["monalisa", "vitruvio", "ceia", "maquina"];
+  // Jogo da memória: 8 obras de Leonardo, cada uma em duas cartas (16 cartas).
+  // As fotos ficam em static/jogo/img/obras/ e foram recortadas no formato da carta.
+  var MEMORY_OBRAS = [
+    { key: "monalisa", nome: "Mona Lisa" },
+    { key: "ceia", nome: "A Última Ceia" },
+    { key: "vitruviano", nome: "Homem Vitruviano" },
+    { key: "arminho", nome: "Dama com Arminho" },
+    { key: "rochas", nome: "A Virgem das Rochas" },
+    { key: "anunciacao", nome: "Anunciação" },
+    { key: "ginevra", nome: "Ginevra de' Benci" },
+    { key: "santana", nome: "Virgem e o Menino com Santa Ana" }
+  ];
+  var MEMORY_KEYS = MEMORY_OBRAS.map(function(o){ return o.key; });
+  var MEMORY_NOMES = {};
+  MEMORY_OBRAS.forEach(function(o){ MEMORY_NOMES[o.key] = o.nome; });
   var FIBONACCI_SPIRAL_SVG = '<svg viewBox="-4 -6 15 10" xmlns="http://www.w3.org/2000/svg">' +
     '<rect x="0" y="0" width="1" height="1" fill="none" stroke="#a678ff" stroke-width="0.05"/>' +
     '<rect x="1" y="0" width="1" height="1" fill="none" stroke="#a678ff" stroke-width="0.05"/>' +
@@ -475,62 +483,49 @@
     '<text x="160" y="92" font-size="17" fill="#cdb4ff" text-anchor="start">altura</text>' +
     '</svg>';
   function genR3P1(rng){
-    var deck = MEMORY_ICON_KEYS.concat(MEMORY_ICON_KEYS);
+    var deck = MEMORY_KEYS.concat(MEMORY_KEYS);
     var shuffled = shuffle(rng, deck);
     var cards = shuffled.map(function(key){ return { key: key }; });
     return {
       type: "memory",
-      question: "Jogo da memória: encontre os pares de obras de Leonardo da Vinci. Clique em duas cartas para revelá-las.",
-      hint: "As quatro obras são a Mona Lisa, o Homem Vitruviano, a Última Ceia e um esboço de máquina voadora. Preste atenção em qual carta mostra cada uma.",
+      question: "Jogo da memória: são 16 cartas com 8 obras de Leonardo da Vinci. Clique em duas cartas para revelá-las e encontre todos os pares.",
+      hint: "As oito obras são: " + MEMORY_OBRAS.map(function(o){ return o.nome; }).join(", ") + ". Tente lembrar onde viu cada uma antes de virar a próxima carta.",
       cards: cards,
-      totalPairs: MEMORY_ICON_KEYS.length
+      totalPairs: MEMORY_KEYS.length
     };
   }
-  var PAINT_COLORS = [
-    { key: "r", name: "vermelho", css: "#d92b2b" },
-    { key: "y", name: "amarelo", css: "#f2d13a" },
-    { key: "b", name: "azul", css: "#2a5fb8" }
+  // A Santa Ceia: as linhas do teto e das tapeçarias levam ao ponto de fuga, na testa de Jesus.
+  // Coordenadas na imagem ceia-completa.jpg (960 x 480).
+  var CEIA_FUGA = { x: 480, y: 232 };
+  var CEIA_LINHAS = [ [242, 0], [718, 0], [0, 10], [960, 10] ];
+  // perguntas sobre a obra; uma é sorteada a cada partida
+  var CEIA_PERGUNTAS = [
+    { texto: "A pintura mede cerca de 4,6 m de altura por 8,8 m de largura. Qual é a área aproximada dela?",
+      certa: 40, erradas: [13, 27, 81], unidade: " m²",
+      dica: "área do retângulo = altura × largura: 4,6 × 8,8 ≈ 40." },
+    { texto: "Leonardo organizou os 12 apóstolos em grupos de 3. Quantos grupos aparecem na mesa?",
+      certa: 4, erradas: [3, 6, 9], unidade: "",
+      dica: "divida: 12 ÷ 3." },
+    { texto: "Leonardo pintou a Santa Ceia de 1495 a 1498. Quantos anos ele levou para terminá-la?",
+      certa: 3, erradas: [2, 4, 5], unidade: " anos",
+      dica: "faça a subtração: 1498 − 1495." },
+    { texto: "Os 12 apóstolos estão divididos igualmente dos dois lados de Jesus. Quantos apóstolos ficam de cada lado?",
+      certa: 6, erradas: [4, 5, 12], unidade: "",
+      dica: "divida os 12 apóstolos em 2 lados iguais: 12 ÷ 2." },
+    { texto: "A pintura tem 8,8 m de largura. Quantos centímetros isso dá?",
+      certa: 880, erradas: [88, 8800, 98], unidade: " cm",
+      dica: "1 metro tem 100 centímetros: 8,8 × 100." }
   ];
-  var PAINT_MAX_DROPS = 20;
-  // Mistura de pigmentos no modelo vermelho-amarelo-azul (RYB), como tinta de verdade:
-  // amarelo + azul dá verde, vermelho + amarelo dá laranja, os três juntos dão marrom.
-  var PAINT_CUBE = [ [1,1,1], [1,0,0], [1,1,0], [1,0.5,0], [0.163,0.373,0.6], [0.5,0,0.5], [0,0.66,0.2], [0.47,0.28,0.13] ];
-  function mixPaint(r, y, b){
-    var max = Math.max(r, y, b);
-    if(max === 0) return null;
-    r /= max; y /= max; b /= max;
-    var out = [0, 0, 0];
-    for(var i=0;i<8;i++){
-      var w = ((i & 1) ? r : 1 - r) * ((i & 2) ? y : 1 - y) * ((i & 4) ? b : 1 - b);
-      for(var c=0;c<3;c++){ out[c] += w * PAINT_CUBE[i][c]; }
-    }
-    return "rgb(" + out.map(function(v){ return Math.round(v * 255); }).join(",") + ")";
-  }
-  // multiplicações básicas cujo resultado é o número de gotas de cada cor
-  var PAINT_PRODUCTS = [ [2,2], [2,3], [2,4], [3,3], [2,5], [2,6], [3,4] ];
   function genR3P2(rng){
-    var order = shuffle(rng, [0, 1, 2]); // em que ordem as cores aparecem na fórmula
-    // três multiplicações com resultados diferentes, para a mistura nunca ficar em partes iguais
-    var products = shuffle(rng, PAINT_PRODUCTS).slice(0, 3);
-    var counts = products.map(function(p){ return p[0] * p[1]; });
-    while(counts[0] === counts[1] || counts[1] === counts[2] || counts[0] === counts[2]){
-      products = shuffle(rng, PAINT_PRODUCTS).slice(0, 3);
-      counts = products.map(function(p){ return p[0] * p[1]; });
-    }
-    var sums = products.map(function(p){
-      return rng() < 0.5 ? p[0] + " × " + p[1] : p[1] + " × " + p[0];
-    });
-    var pieces = order.map(function(colorIdx, pos){
-      return sums[pos] + " gotas de " + PAINT_COLORS[colorIdx].name;
-    });
-    var answer = { r: 0, y: 0, b: 0 };
-    order.forEach(function(colorIdx, pos){ answer[PAINT_COLORS[colorIdx].key] = counts[pos]; });
+    var q = CEIA_PERGUNTAS[randInt(rng, 0, CEIA_PERGUNTAS.length - 1)];
+    var mc = buildMC(rng, q.certa, q.erradas);
     return {
-      type: "paint",
-      question: "Falta pintar o manto de uma figura neste afresco. Leonardo deixou a fórmula da cor: resolva a multiplicação de cada cor primária para saber quantas gotas pingar e recrie a cor exata da amostra.",
-      hint: "Resolva uma multiplicação de cada vez: o resultado é o número de gotas daquela cor. Use os botões + e − de cada pote até o número certo.",
-      formula: "Pingue " + pieces[0] + ", " + pieces[1] + " e " + pieces[2] + ".",
-      total: counts[0] + counts[1] + counts[2], answer: answer
+      type: "ceia",
+      question: "Na Santa Ceia, Leonardo usou a perspectiva: todas as linhas do teto e das paredes se encontram em um único ponto, o ponto de fuga. Encontre esse ponto na pintura e depois responda à pergunta sobre a obra.",
+      hint: "Siga as linhas amarelas até onde elas se cruzam: o ponto de fuga fica na cabeça de Jesus, no centro do quadro. Na pergunta, " + q.dica,
+      pergunta: q.texto,
+      options: mc.options.map(function(o){ return o + q.unidade; }),
+      correctIndex: mc.correctIndex
     };
   }
   function genR3P3(rng){
@@ -720,6 +715,7 @@
   // caminho vem do template Django; se faltar, usa o caminho padrão do static
   var MONALISA_URL = puzzleBodyEl.getAttribute("data-monalisa") || "/static/jogo/img/monalisa.jpg?v=2";
   new Image().src = MONALISA_URL; // pré-carrega para os pedaços aparecerem na hora
+  var OBRAS_URL = puzzleBodyEl.getAttribute("data-obras") || "/static/jogo/img/obras/";
   var feedbackEl = document.getElementById("feedback");
   var hintBox = document.getElementById("hintBox");
   var btnHint = document.getElementById("btnHint");
@@ -737,7 +733,8 @@
   ];
 
   var finalTimeEl = document.getElementById("finalTime");
-  var cofreAnim = document.getElementById("cofreAnim");
+  var cofreVitoria = document.getElementById("cofreVitoria");
+  var cofreDerrota = document.getElementById("cofreDerrota");
   var capaEl = document.getElementById("screen-capa");
   var videoEl = document.getElementById("screen-video");
   var videoQuadro = document.getElementById("videoQuadro");
@@ -782,6 +779,54 @@
   }
   function onTimeUp(){
     showScreen("timeout");
+    animarCofre3d(cofreDerrota);
+  }
+
+  // ---------- Cofre 3D do final ----------
+  // Uma caixa de metal com 5 faces e uma porta grossa presa na dobradiça da esquerda.
+  // O mesmo cofre serve para a vitória (porta abre) e para a derrota (correntes e cadeado).
+  function montarCofre3d(el){
+    var rebites = [[9,9],[91,9],[9,91],[91,91]].map(function(p){
+      return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3" fill="#cfc9e8"/>';
+    }).join("");
+    var portaSvg = '<svg viewBox="0 0 100 100">' + rebites +
+      '<circle cx="50" cy="50" r="30" fill="#2a2548" stroke="#c9a35a" stroke-width="4"/>' +
+      '<circle cx="50" cy="50" r="25" fill="none" stroke="#c9a35a" stroke-width="1.5" stroke-dasharray="1.5 5.3"/>' +
+      '<g class="cf-roda">' +
+        '<path d="M50 24V76M24 50H76M32 32L68 68M68 32L32 68" stroke="#e6c67c" stroke-width="5" stroke-linecap="round"/>' +
+        '<circle cx="50" cy="50" r="10" fill="#c9a35a" stroke="#6a461a" stroke-width="2"/>' +
+      '</g>' +
+      '<rect x="80" y="40" width="7" height="20" rx="3" fill="#c9a35a" stroke="#6a461a"/>' +
+      '<circle class="cf-luz" cx="50" cy="11" r="4"/>' +
+      // correntes em X e cadeado: só aparecem no cofre trancado
+      '<g class="cf-correntes">' +
+        '<path d="M4 4L96 96M96 4L4 96" stroke="#3a3550" stroke-width="9"/>' +
+        '<path d="M4 4L96 96M96 4L4 96" stroke="#b9b4d0" stroke-width="5" stroke-dasharray="7 3"/>' +
+        '<path d="M42 58V50A8 8 0 0 1 58 50V58" fill="none" stroke="#b9b4d0" stroke-width="4"/>' +
+        '<rect x="37" y="57" width="26" height="22" rx="3" fill="#c9a35a" stroke="#6a461a" stroke-width="2"/>' +
+        '<circle cx="50" cy="66" r="3" fill="#2a1a0e"/><path d="M50 67V73" stroke="#2a1a0e" stroke-width="2.5"/>' +
+      '</g>' +
+    '</svg>';
+    el.innerHTML =
+      '<div class="cofre3d-treme"><div class="cofre3d-corpo">' +
+        '<div class="cf cf-fundo"><img src="' + MONALISA_URL + '" alt="">' +
+          '<span class="cf-faisca"></span><span class="cf-faisca"></span><span class="cf-faisca"></span>' +
+          '<span class="cf-faisca"></span><span class="cf-faisca"></span></div>' +
+        '<div class="cf cf-esq"></div><div class="cf cf-dir"></div>' +
+        '<div class="cf cf-topo"></div><div class="cf cf-base"></div>' +
+        '<div class="cf cf-aro"></div>' +
+        '<div class="cf-porta">' +
+          '<div class="cf-porta-frente">' + portaSvg + '</div>' +
+          '<div class="cf-porta-verso"></div>' +
+          '<div class="cf-porta-borda"></div>' +
+        '</div>' +
+      '</div></div>';
+  }
+  // tira e põe a classe para a animação rodar de novo a cada final
+  function animarCofre3d(el){
+    el.classList.remove("anim");
+    void el.offsetWidth;
+    el.classList.add("anim");
   }
 
   // ---------- Screen switching ----------
@@ -1798,100 +1843,97 @@
     '<path d="M18 220V92A132 132 0 0 1 282 92V220" fill="none" stroke="#8c6d46" stroke-width="6"/>' +
     '<path d="M40 40L62 70L55 96M250 150L236 176L246 204M120 30L134 52" fill="none" stroke="rgba(90,60,30,0.4)" stroke-width="1.2"/>';
 
-  function renderPaint(puzzle){
-    puzzle._drops = { r: 0, y: 0, b: 0 };
+  // ---------- A Santa Ceia: achar o ponto de fuga e responder sobre a obra ----------
+  function renderCeia(puzzle){
+    puzzle._achou = false;
+    puzzle._resolvido = false;
     var wrap = document.createElement("div");
-    wrap.className = "paint-wrap";
+    wrap.className = "ceia-wrap";
 
-    var top = document.createElement("div");
-    top.className = "paint-top";
-    var fresco = svgEl("svg", { viewBox: "0 0 300 220", "class": "paint-fresco", role: "img", "aria-label": "Afresco com o manto de uma figura ainda sem pintar" });
-    fresco.innerHTML = FRESCO_SVG;
-    var manto = fresco.querySelector(".fresco-manto");
-    top.appendChild(fresco);
+    var passo = document.createElement("div");
+    passo.className = "persp-step";
+    passo.innerHTML = "<strong>Parte 1:</strong> as linhas amarelas seguem o teto e as tapeçarias, mas param no meio do caminho. Clique no ponto onde todas elas se encontram.";
+    wrap.appendChild(passo);
 
-    var swatches = document.createElement("div");
-    swatches.className = "paint-swatches";
-    function swatch(title){
-      var box = document.createElement("div");
-      box.className = "paint-swatch";
-      var chip = document.createElement("div");
-      chip.className = "paint-chip";
-      var cap = document.createElement("span");
-      cap.textContent = title;
-      box.appendChild(chip);
-      box.appendChild(cap);
-      swatches.appendChild(box);
-      return chip;
-    }
-    swatch("Amostra de Leonardo").style.background = mixPaint(puzzle.answer.r, puzzle.answer.y, puzzle.answer.b);
-    var mixChip = swatch("Sua mistura");
-    top.appendChild(swatches);
-    wrap.appendChild(top);
-
-    var formula = document.createElement("div");
-    formula.className = "paint-formula";
-    formula.innerHTML = "<strong>Fórmula de Leonardo:</strong> ";
-    formula.appendChild(document.createTextNode(puzzle.formula));
-    wrap.appendChild(formula);
-
-    var palette = document.createElement("div");
-    palette.className = "paint-palette";
-    var countEls = {};
-    PAINT_COLORS.forEach(function(color){
-      var pot = document.createElement("div");
-      pot.className = "paint-pot";
-      var blob = document.createElement("div");
-      blob.className = "paint-blob";
-      blob.style.background = color.css;
-      var name = document.createElement("div");
-      name.className = "paint-name";
-      name.textContent = color.name;
-      var row = document.createElement("div");
-      row.className = "paint-row";
-      function stepButton(symbol, step, verb){
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "paint-btn";
-        btn.textContent = symbol;
-        btn.setAttribute("aria-label", verb + " uma gota de " + color.name);
-        btn.addEventListener("click", function(){
-          puzzle._drops[color.key] = Math.max(0, Math.min(PAINT_MAX_DROPS, puzzle._drops[color.key] + step));
-          update();
-        });
-        return btn;
-      }
-      var count = document.createElement("span");
-      count.className = "paint-count";
-      countEls[color.key] = count;
-      row.appendChild(stepButton("−", -1, "Tirar"));
-      row.appendChild(count);
-      row.appendChild(stepButton("+", 1, "Pingar"));
-      pot.appendChild(blob);
-      pot.appendChild(name);
-      pot.appendChild(row);
-      palette.appendChild(pot);
+    var svg = svgEl("svg", { viewBox: "0 0 960 480", "class": "ceia-svg", role: "img",
+      "aria-label": "A Santa Ceia, de Leonardo da Vinci, com linhas de perspectiva" });
+    var img = svgEl("image", { width: 960, height: 480 });
+    img.setAttribute("href", OBRAS_URL + "ceia-completa.jpg");
+    svg.appendChild(img);
+    var revela = svgEl("g", { "class": "ceia-revela" });
+    var guias = svgEl("g", { "class": "ceia-guias" });
+    CEIA_LINHAS.forEach(function(p){
+      revela.appendChild(svgEl("line", { x1: p[0], y1: p[1], x2: CEIA_FUGA.x, y2: CEIA_FUGA.y }));
+      // a guia vai só até 45% do caminho: o jogador completa o resto com os olhos
+      guias.appendChild(svgEl("line", { x1: p[0], y1: p[1],
+        x2: p[0] + (CEIA_FUGA.x - p[0]) * 0.45, y2: p[1] + (CEIA_FUGA.y - p[1]) * 0.45 }));
     });
-    wrap.appendChild(palette);
+    revela.appendChild(svgEl("circle", { cx: CEIA_FUGA.x, cy: CEIA_FUGA.y, r: 18 }));
+    svg.appendChild(revela);
+    svg.appendChild(guias);
+    var marca = svgEl("circle", { "class": "persp-marca", r: 14 });
+    svg.appendChild(marca);
+    wrap.appendChild(svg);
 
-    var totalEl = document.createElement("div");
-    totalEl.className = "paint-total";
-    totalEl.setAttribute("role", "status");
-    totalEl.setAttribute("aria-live", "polite");
-    wrap.appendChild(totalEl);
+    var status = document.createElement("div");
+    status.className = "persp-status";
+    wrap.appendChild(status);
 
-    function update(){
-      var d = puzzle._drops;
-      var used = d.r + d.y + d.b;
-      var mixed = mixPaint(d.r, d.y, d.b);
-      PAINT_COLORS.forEach(function(color){ countEls[color.key].textContent = String(d[color.key]); });
-      mixChip.style.background = mixed || "";
-      mixChip.classList.toggle("vazio", !mixed);
-      manto.style.fill = mixed || "";
-      manto.classList.toggle("pintado", !!mixed);
-      totalEl.innerHTML = "Gotas usadas: <strong>" + used + "</strong> de " + puzzle.total;
-    }
-    update();
+    var quiz = document.createElement("div");
+    quiz.className = "scale-quiz hidden";
+    var pergunta = document.createElement("div");
+    pergunta.className = "scale-question";
+    pergunta.innerHTML = '<span class="ceia-parte">Parte 2:</span> ' + puzzle.pergunta;
+    quiz.appendChild(pergunta);
+    var opcoes = document.createElement("div");
+    opcoes.className = "scale-options";
+    puzzle.options.forEach(function(texto, i){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "scale-opt";
+      b.textContent = texto;
+      b.addEventListener("click", function(){
+        if(puzzle._resolvido) return;
+        if(i !== puzzle.correctIndex){
+          b.classList.add("errada");
+          b.disabled = true;
+          feedbackEl.textContent = "Não é " + texto + ". Faça a conta de novo.";
+          feedbackEl.className = "feedback err";
+          return;
+        }
+        puzzle._resolvido = true;
+        b.classList.add("certa");
+        opcoes.querySelectorAll(".scale-opt").forEach(function(o){ o.disabled = true; });
+        feedbackEl.textContent = "Isso mesmo: " + texto + "! Clique em Verificar para continuar.";
+        feedbackEl.className = "feedback ok";
+      });
+      opcoes.appendChild(b);
+    });
+    quiz.appendChild(opcoes);
+    wrap.appendChild(quiz);
+
+    svg.addEventListener("click", function(e){
+      if(puzzle._achou) return;
+      var pt = svg.createSVGPoint();
+      pt.x = e.clientX; pt.y = e.clientY;
+      pt = pt.matrixTransform(svg.getScreenCTM().inverse());
+      var dist = Math.sqrt(Math.pow(pt.x - CEIA_FUGA.x, 2) + Math.pow(pt.y - CEIA_FUGA.y, 2));
+      // folga de 60 (num quadro de 960 de largura) para dar para acertar com o dedo no celular
+      if(dist > 60){
+        marca.setAttribute("cx", pt.x);
+        marca.setAttribute("cy", pt.y);
+        marca.classList.add("visivel");
+        status.textContent = "Ainda não. Continue cada linha amarela em linha reta até ela cruzar as outras.";
+        status.className = "persp-status err";
+        return;
+      }
+      puzzle._achou = true;
+      marca.classList.remove("visivel");
+      svg.classList.add("achou");
+      status.textContent = "Achou! O ponto de fuga fica na cabeça de Jesus: tudo na sala aponta para ele.";
+      status.className = "persp-status ok";
+      quiz.classList.remove("hidden");
+    });
 
     puzzleBodyEl.appendChild(wrap);
   }
@@ -2105,6 +2147,7 @@
     if(isMatch){
       first.el.classList.add("matched");
       cardEl.classList.add("matched");
+      first.el.title = cardEl.title = MEMORY_NOMES[puzzle.cards[idx].key];
       puzzle._matchedCount = (puzzle._matchedCount || 0) + 1;
       var label = puzzleBodyEl.querySelector("#memoryFoundLabel");
       if(label) label.textContent = String(puzzle._matchedCount);
@@ -2114,7 +2157,7 @@
         first.el.classList.remove("flipped");
         cardEl.classList.remove("flipped");
         puzzle._busy = false;
-      }, 700);
+      }, 1000);
     }
   }
 
@@ -2132,7 +2175,8 @@
       cardEl.type = "button";
       cardEl.className = "memory-card";
       cardEl.setAttribute("aria-label", "Carta " + (idx + 1));
-      cardEl.innerHTML = '<span class="memory-card-back">?</span><span class="memory-card-front">' + MEMORY_ICONS[card.key] + '</span>';
+      cardEl.innerHTML = '<span class="memory-card-back">?</span><span class="memory-card-front">' +
+        '<img src="' + OBRAS_URL + 'obra-' + card.key + '.jpg" alt="' + MEMORY_NOMES[card.key] + '"></span>';
       cardEl.addEventListener("click", function(){
         handleMemoryCardClick(puzzle, idx, cardEl);
       });
@@ -2256,7 +2300,7 @@
     else if(puzzle.type === "bridge") renderBridge(puzzle);
     else if(puzzle.type === "scale") renderScale(puzzle);
     else if(puzzle.type === "mirror") renderMirror(puzzle);
-    else if(puzzle.type === "paint") renderPaint(puzzle);
+    else if(puzzle.type === "ceia") renderCeia(puzzle);
     else if(puzzle.type === "perspective") renderPerspective(puzzle);
     else if(puzzle.type === "study") renderStudy(puzzle);
     else if(puzzle.type === "davinci") renderDavinci(puzzle);
@@ -2322,10 +2366,8 @@
       if((puzzle._step || 0) < 2) return null;
       return true;
     }
-    if(puzzle.type === "paint"){
-      var drops = puzzle._drops;
-      if(drops.r + drops.y + drops.b === 0) return null;
-      return drops.r === puzzle.answer.r && drops.y === puzzle.answer.y && drops.b === puzzle.answer.b;
+    if(puzzle.type === "ceia"){
+      return puzzle._resolvido ? true : null;
     }
     if(puzzle.type === "mirror"){
       var typed = puzzleBodyEl.querySelector(".mirror-input").value.replace(/\s/g, "");
@@ -2392,8 +2434,8 @@
         feedbackEl.textContent = "Correto! As roletas travam e o cofre se abre...";
         delay = 1500;
       }
-      if(puzzle.type === "paint"){
-        feedbackEl.textContent = "Correto! A cor é idêntica e o afresco está completo...";
+      if(puzzle.type === "ceia"){
+        feedbackEl.textContent = "Correto! Você enxergou a Santa Ceia com os olhos de Leonardo...";
         delay = 1500;
       }
       feedbackEl.className = "feedback ok";
@@ -2455,10 +2497,7 @@
       finalTimeEl.textContent = formatTime(GAME_SECONDS - state.secondsLeft);
       setTimeout(function(){
         showScreen("victory");
-        // tira e põe a classe para a porta do cofre abrir de novo a cada vitória
-        cofreAnim.classList.remove("abrindo");
-        void cofreAnim.offsetWidth;
-        cofreAnim.classList.add("abrindo");
+        animarCofre3d(cofreVitoria);
       }, 800);
     } else {
       vaultFeedback.textContent = "O mecanismo resiste... esse não é o código certo.";
@@ -2586,6 +2625,8 @@
   document.getElementById("btnSairSim").addEventListener("click", restart);
 
   // ---------- Init ----------
+  montarCofre3d(cofreVitoria);
+  montarCofre3d(cofreDerrota);
   updateTimerDisplay();
   renderDots();
 })();

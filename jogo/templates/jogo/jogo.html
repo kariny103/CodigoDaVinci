@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>O Código da Vinci — Matemática + Informática</title>
-<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=21">
-<link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=25">
+<link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=5">
 <link rel="stylesheet" href="{% static 'jogo/css/moldura.css' %}?v=4">
 </head>
 <body>
@@ -17,6 +17,7 @@
   <div class="capa-centro">
     <h1 class="capa-titulo"><span>O Código</span><span>Da Vinci</span></h1>
     <p class="capa-sub">Matemática <b>+</b> Informática</p>
+    <p class="capa-autoria"><b>Professora Kariny</b><br>Turma 1602</p>
     <button class="capa-btn" id="btnCapa">Iniciar Vídeo</button>
   </div>
 
@@ -320,7 +321,7 @@
       <div class="puzzle-card">
         <div class="puzzle-label" id="puzzleLabel">DESAFIO 1 DE 3</div>
         <p class="puzzle-question" id="puzzleQuestion"></p>
-        <div id="puzzleBody" class="puzzle-body" data-monalisa="{% static 'jogo/img/monalisa.jpg' %}?v=2"></div>
+        <div id="puzzleBody" class="puzzle-body" data-monalisa="{% static 'jogo/img/monalisa.jpg' %}?v=2" data-obras="{% static 'jogo/img/obras/' %}"></div>
         <div class="center-actions">
           <button class="btn-primary" id="btnCheck">Verificar</button>
         </div>
@@ -366,30 +367,12 @@
     <section id="screen-victory" class="hidden">
       <div class="fragment-reveal">
         <h1 class="title" style="font-size:1.6rem;">🏛 O Cofre se Abre!</h1>
-        <!-- cofre que gira a roda, acende a luz verde e abre a porta -->
-        <div class="cofre-anim" id="cofreAnim" aria-hidden="true">
-          <div class="cofre-caixa">
-            <div class="cofre-dentro">
-              <img src="{% static 'jogo/img/monalisa.jpg' %}?v=2" alt="">
-            </div>
-            <div class="cofre-porta">
-              <svg viewBox="0 0 100 100">
-                <circle class="cofre-rebite" cx="9" cy="9" r="3"/><circle class="cofre-rebite" cx="91" cy="9" r="3"/>
-                <circle class="cofre-rebite" cx="9" cy="91" r="3"/><circle class="cofre-rebite" cx="91" cy="91" r="3"/>
-                <circle cx="50" cy="50" r="30" fill="#2a2548" stroke="#c9a35a" stroke-width="4"/>
-                <g class="cofre-roda">
-                  <path d="M50 22V78M22 50H78M30 30L70 70M70 30L30 70" stroke="#e6c67c" stroke-width="5" stroke-linecap="round"/>
-                  <circle cx="50" cy="50" r="10" fill="#c9a35a" stroke="#6a461a" stroke-width="2"/>
-                </g>
-                <circle class="cofre-luz" cx="84" cy="50" r="4"/>
-              </svg>
-            </div>
-          </div>
-        </div>
+        <!-- cofre 3D: gira a roda, acende a luz verde e abre a porta (montado pelo jogo.js) -->
+        <div class="cofre3d cofre3d-aberto" id="cofreVitoria" aria-hidden="true"></div>
         <p style="font-size:1.4rem; font-weight:bold; color:var(--gold-bright); margin:10px 0 18px;">Parabéns, você abriu o Cofre de Leonardo da Vinci!</p>
         <p class="story" style="text-align:left;">
-          As engrenagens giram, e uma réplica do sorriso da Mona Lisa aparece gravada na
-          porta. Você pensou como Leonardo da Vinci: uniu arte, curiosidade e matemática
+          As engrenagens giram, a porta se abre e, lá dentro, brilha o tesouro de
+          Leonardo: a Mona Lisa. Você pensou como Leonardo da Vinci: uniu arte, curiosidade e matemática
           para desvendar seus segredos.
         </p>
         <p>Tempo total: <strong id="finalTime">00:00</strong></p>
@@ -407,6 +390,8 @@
     <section id="screen-timeout" class="hidden">
       <div class="fragment-reveal">
         <h1 class="title" style="font-size:1.6rem;">⏳ O Tempo Acabou!</h1>
+        <!-- cofre 3D fechado com correntes: a roda tenta girar e trava -->
+        <div class="cofre3d cofre3d-trancado" id="cofreDerrota" aria-hidden="true"></div>
         <p style="font-size:1.4rem; font-weight:bold; color:var(--wax); margin:10px 0 18px;">Que pena! Você não conseguiu abrir o Cofre de Leonardo da Vinci.</p>
         <p class="story" style="text-align:left;">
           As velas da oficina se apagam. Leonardo balança a cabeça: "O tempo é o mais precioso
@@ -421,7 +406,7 @@
   </div>
 </div>
 
-<script src="{% static 'jogo/js/jogo.js' %}?v=31"></script>
+<script src="{% static 'jogo/js/jogo.js' %}?v=35"></script>
 
 </body>
 </html>
