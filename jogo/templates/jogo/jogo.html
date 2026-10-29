@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>O Código da Vinci — Matemática + Informática</title>
-<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=25">
+<link rel="stylesheet" href="{% static 'jogo/css/jogo.css' %}?v=27">
 <link rel="stylesheet" href="{% static 'jogo/css/capa.css' %}?v=5">
 <link rel="stylesheet" href="{% static 'jogo/css/moldura.css' %}?v=4">
 </head>
@@ -347,6 +347,8 @@
         Você chegou à câmara final. Digite, na ordem das salas, os <strong>três números</strong>
         que você conquistou para abrir o Cofre de Leonardo.
       </p>
+      <!-- cofre 3D: treme e fica vermelho com o código errado, abre com o código certo -->
+      <div class="cofre3d" id="cofreCodigo" aria-hidden="true"></div>
       <div class="puzzle-card">
         <div class="puzzle-label">O CÓDIGO DO COFRE</div>
         <div class="vault-code-row" aria-hidden="true">
@@ -367,8 +369,8 @@
     <section id="screen-victory" class="hidden">
       <div class="fragment-reveal">
         <h1 class="title" style="font-size:1.6rem;">🏛 O Cofre se Abre!</h1>
-        <!-- cofre 3D: gira a roda, acende a luz verde e abre a porta (montado pelo jogo.js) -->
-        <div class="cofre3d cofre3d-aberto" id="cofreVitoria" aria-hidden="true"></div>
+        <!-- cofre 3D já aberto: a porta abriu na tela do código (montado pelo jogo.js) -->
+        <div class="cofre3d aberto-fixo" id="cofreVitoria" aria-hidden="true"></div>
         <p style="font-size:1.4rem; font-weight:bold; color:var(--gold-bright); margin:10px 0 18px;">Parabéns, você abriu o Cofre de Leonardo da Vinci!</p>
         <p class="story" style="text-align:left;">
           As engrenagens giram, a porta se abre e, lá dentro, brilha o tesouro de
@@ -406,7 +408,7 @@
   </div>
 </div>
 
-<script src="{% static 'jogo/js/jogo.js' %}?v=35"></script>
+<script src="{% static 'jogo/js/jogo.js' %}?v=37"></script>
 
 </body>
 </html>

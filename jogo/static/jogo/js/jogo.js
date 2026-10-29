@@ -494,38 +494,44 @@
       totalPairs: MEMORY_KEYS.length
     };
   }
-  // A Santa Ceia: as linhas do teto e das tapeçarias levam ao ponto de fuga, na testa de Jesus.
-  // Coordenadas na imagem ceia-completa.jpg (960 x 480).
-  var CEIA_FUGA = { x: 480, y: 232 };
-  var CEIA_LINHAS = [ [242, 0], [718, 0], [0, 10], [960, 10] ];
-  // perguntas sobre a obra; uma é sorteada a cada partida
-  var CEIA_PERGUNTAS = [
-    { texto: "A pintura mede cerca de 4,6 m de altura por 8,8 m de largura. Qual é a área aproximada dela?",
-      certa: 40, erradas: [13, 27, 81], unidade: " m²",
-      dica: "área do retângulo = altura × largura: 4,6 × 8,8 ≈ 40." },
-    { texto: "Leonardo organizou os 12 apóstolos em grupos de 3. Quantos grupos aparecem na mesa?",
-      certa: 4, erradas: [3, 6, 9], unidade: "",
-      dica: "divida: 12 ÷ 3." },
-    { texto: "Leonardo pintou a Santa Ceia de 1495 a 1498. Quantos anos ele levou para terminá-la?",
-      certa: 3, erradas: [2, 4, 5], unidade: " anos",
-      dica: "faça a subtração: 1498 − 1495." },
-    { texto: "Os 12 apóstolos estão divididos igualmente dos dois lados de Jesus. Quantos apóstolos ficam de cada lado?",
-      certa: 6, erradas: [4, 5, 12], unidade: "",
-      dica: "divida os 12 apóstolos em 2 lados iguais: 12 ÷ 2." },
-    { texto: "A pintura tem 8,8 m de largura. Quantos centímetros isso dá?",
-      certa: 880, erradas: [88, 8800, 98], unidade: " cm",
-      dica: "1 metro tem 100 centímetros: 8,8 × 100." }
+  // Jogo dos erros da Santa Ceia: a cópia de um aprendiz tem 5 diferenças em relação ao original.
+  // Coordenadas na imagem ceia-completa.jpg (960 x 480). Cada diferença é um desenho por cima da
+  // cópia; "{IMG}" vira o endereço da imagem, para recortar pedaços da própria pintura.
+  var CEIA_DIFERENCAS = [
+    { nome: "o manto vermelho de Jesus ficou verde", x: 452, y: 290, r: 50,
+      svg: '<g clip-path="url(#cc-manto)" filter="url(#cc-verde)"><image href="{IMG}" width="960" height="480"/></g>' },
+    { nome: "a tapeçaria da esquerda ficou azul", x: 55, y: 125, r: 65,
+      svg: '<g clip-path="url(#cc-tapete)" filter="url(#cc-azul)"><image href="{IMG}" width="960" height="480"/></g>' },
+    { nome: "a janela da direita sumiu", x: 577, y: 218, r: 45,
+      svg: '<g clip-path="url(#cc-janela)"><image href="{IMG}" x="-44" width="960" height="480"/></g>' },
+    { nome: "apareceu um cálice dourado na mesa", x: 712, y: 312, r: 45,
+      svg: '<g transform="translate(712 312)"><path d="M-13 -20H13C13 -6 7 0 0 1C-7 0 -13 -6 -13 -20Z" fill="#ffd24a" stroke="#6a461a" stroke-width="2"/>' +
+        '<path d="M-2 1V14M-10 18H10" stroke="#e6b830" stroke-width="5" stroke-linecap="round"/><path d="M-8 -16H6" stroke="#fff3c4" stroke-width="2.5" stroke-linecap="round"/></g>' },
+    { nome: "a porta ganhou tábuas e uma maçaneta", x: 486, y: 432, r: 55,
+      svg: '<g clip-path="url(#cc-porta)"><rect x="380" y="385" width="215" height="95" fill="#6a3f1c"/>' +
+        '<path d="M410 385V480M440 385V480M470 385V480M500 385V480M530 385V480M560 385V480" stroke="#3e220c" stroke-width="3"/>' +
+        '<circle cx="545" cy="435" r="7" fill="#ffd24a" stroke="#6a461a" stroke-width="2"/></g>' },
+    { nome: "Jesus ganhou uma auréola dourada", x: 481, y: 228, r: 45,
+      svg: '<circle cx="481" cy="226" r="31" fill="none" stroke="#ffd24a" stroke-width="5" opacity="0.9" filter="url(#cc-brilho)"/>' },
+    { nome: "apareceu um lustre pendurado no teto", x: 480, y: 70, r: 50,
+      svg: '<path d="M480 0V58" stroke="#2a1a0e" stroke-width="3"/><path d="M450 70Q480 92 510 70Z" fill="#c9a35a" stroke="#6a461a" stroke-width="2"/>' +
+        '<path d="M454 70V58M480 74V58M506 70V58" stroke="#f3ead2" stroke-width="5"/>' +
+        '<path d="M454 47C458 53 457 57 454 57C451 57 450 53 454 47ZM480 47C484 53 483 57 480 57C477 57 476 53 480 47ZM506 47C510 53 509 57 506 57C503 57 502 53 506 47Z" fill="#ffab3d"/>' },
+    { nome: "um gato está escondido embaixo da mesa", x: 800, y: 440, r: 45,
+      svg: '<g transform="translate(800 446)" fill="#141018"><ellipse cx="0" cy="10" rx="16" ry="20"/><circle cx="0" cy="-16" r="11"/>' +
+        '<path d="M-10 -22L-8 -36L-2 -26ZM10 -22L8 -36L2 -26Z"/><path d="M14 22C30 22 30 4 22 0" fill="none" stroke="#141018" stroke-width="5" stroke-linecap="round"/>' +
+        '<circle cx="-4" cy="-17" r="2" fill="#ffd24a"/><circle cx="4" cy="-17" r="2" fill="#ffd24a"/></g>' }
   ];
+  var CEIA_QTD = 5;
   function genR3P2(rng){
-    var q = CEIA_PERGUNTAS[randInt(rng, 0, CEIA_PERGUNTAS.length - 1)];
-    var mc = buildMC(rng, q.certa, q.erradas);
+    var escolhidas = shuffle(rng, CEIA_DIFERENCAS.map(function(d, i){ return i; })).slice(0, CEIA_QTD);
+    var difs = escolhidas.map(function(i){ return CEIA_DIFERENCAS[i]; });
     return {
       type: "ceia",
-      question: "Na Santa Ceia, Leonardo usou a perspectiva: todas as linhas do teto e das paredes se encontram em um único ponto, o ponto de fuga. Encontre esse ponto na pintura e depois responda à pergunta sobre a obra.",
-      hint: "Siga as linhas amarelas até onde elas se cruzam: o ponto de fuga fica na cabeça de Jesus, no centro do quadro. Na pergunta, " + q.dica,
-      pergunta: q.texto,
-      options: mc.options.map(function(o){ return o + q.unidade; }),
-      correctIndex: mc.correctIndex
+      question: "Um aprendiz de Leonardo tentou copiar a Santa Ceia, mas se distraiu e cometeu 5 erros. Compare a pintura original (em cima) com a cópia (embaixo) e clique em cada diferença que encontrar.",
+      hint: "Olhe com calma o teto, as janelas, as tapeçarias, a mesa, a porta e as roupas. As diferenças são: " +
+        difs.map(function(d){ return d.nome; }).join("; ") + ".",
+      difs: difs
     };
   }
   function genR3P3(rng){
@@ -733,7 +739,9 @@
   ];
 
   var finalTimeEl = document.getElementById("finalTime");
+  var cofreCodigo = document.getElementById("cofreCodigo");
   var cofreVitoria = document.getElementById("cofreVitoria");
+  var btnVaultCheck = document.getElementById("btnVaultCheck");
   var cofreDerrota = document.getElementById("cofreDerrota");
   var capaEl = document.getElementById("screen-capa");
   var videoEl = document.getElementById("screen-video");
@@ -1843,96 +1851,96 @@
     '<path d="M18 220V92A132 132 0 0 1 282 92V220" fill="none" stroke="#8c6d46" stroke-width="6"/>' +
     '<path d="M40 40L62 70L55 96M250 150L236 176L246 204M120 30L134 52" fill="none" stroke="rgba(90,60,30,0.4)" stroke-width="1.2"/>';
 
-  // ---------- A Santa Ceia: achar o ponto de fuga e responder sobre a obra ----------
+  // ---------- A Santa Ceia: jogo dos erros entre o original e a cópia ----------
   function renderCeia(puzzle){
-    puzzle._achou = false;
-    puzzle._resolvido = false;
+    puzzle._achadas = 0;
+    puzzle._achadasIdx = {}; // posições em puzzle.difs já encontradas nesta partida
+    var total = puzzle.difs.length;
+    var img = OBRAS_URL + "ceia-completa.jpg";
     var wrap = document.createElement("div");
     wrap.className = "ceia-wrap";
 
-    var passo = document.createElement("div");
-    passo.className = "persp-step";
-    passo.innerHTML = "<strong>Parte 1:</strong> as linhas amarelas seguem o teto e as tapeçarias, mas param no meio do caminho. Clique no ponto onde todas elas se encontram.";
-    wrap.appendChild(passo);
+    var placar = document.createElement("div");
+    placar.className = "ceia-placar";
+    wrap.appendChild(placar);
+    function atualizarPlacar(){
+      var bolinhas = "";
+      for(var i = 0; i < total; i++){
+        bolinhas += '<span class="ceia-bolinha' + (i < puzzle._achadas ? " achada" : "") + '"></span>';
+      }
+      placar.innerHTML = "Diferenças encontradas: <strong>" + puzzle._achadas + " de " + total + "</strong>" +
+        '<span class="ceia-bolinhas">' + bolinhas + "</span>";
+    }
+    atualizarPlacar();
 
-    var svg = svgEl("svg", { viewBox: "0 0 960 480", "class": "ceia-svg", role: "img",
-      "aria-label": "A Santa Ceia, de Leonardo da Vinci, com linhas de perspectiva" });
-    var img = svgEl("image", { width: 960, height: 480 });
-    img.setAttribute("href", OBRAS_URL + "ceia-completa.jpg");
-    svg.appendChild(img);
-    var revela = svgEl("g", { "class": "ceia-revela" });
-    var guias = svgEl("g", { "class": "ceia-guias" });
-    CEIA_LINHAS.forEach(function(p){
-      revela.appendChild(svgEl("line", { x1: p[0], y1: p[1], x2: CEIA_FUGA.x, y2: CEIA_FUGA.y }));
-      // a guia vai só até 45% do caminho: o jogador completa o resto com os olhos
-      guias.appendChild(svgEl("line", { x1: p[0], y1: p[1],
-        x2: p[0] + (CEIA_FUGA.x - p[0]) * 0.45, y2: p[1] + (CEIA_FUGA.y - p[1]) * 0.45 }));
-    });
-    revela.appendChild(svgEl("circle", { cx: CEIA_FUGA.x, cy: CEIA_FUGA.y, r: 18 }));
-    svg.appendChild(revela);
-    svg.appendChild(guias);
-    var marca = svgEl("circle", { "class": "persp-marca", r: 14 });
-    svg.appendChild(marca);
-    wrap.appendChild(svg);
+    // recortes e filtros usados pelos desenhos das diferenças
+    var defs = '<defs>' +
+      '<clipPath id="cc-manto"><ellipse cx="452" cy="290" rx="32" ry="40"/></clipPath>' +
+      '<clipPath id="cc-tapete"><rect x="0" y="22" width="108" height="205"/></clipPath>' +
+      '<clipPath id="cc-janela"><rect x="555" y="182" width="45" height="72"/></clipPath>' +
+      '<clipPath id="cc-porta"><path d="M378 480V400Q486 368 594 400V480Z"/></clipPath>' +
+      '<filter id="cc-verde"><feColorMatrix type="hueRotate" values="110"/></filter>' +
+      '<filter id="cc-azul"><feColorMatrix type="hueRotate" values="200"/></filter>' +
+      '<filter id="cc-brilho"><feGaussianBlur stdDeviation="1.5"/></filter>' +
+    '</defs>';
+    function quadro(rotulo, copia){
+      var fig = document.createElement("figure");
+      fig.className = "ceia-quadro";
+      var html = '<svg viewBox="0 0 960 480" class="ceia-svg" role="img" aria-label="' + rotulo + '">' +
+        (copia ? defs : "") + '<image href="' + img + '" width="960" height="480"/>';
+      if(copia){
+        puzzle.difs.forEach(function(d){ html += d.svg.split("{IMG}").join(img); });
+      }
+      html += '<g class="ceia-marcas"></g></svg>';
+      fig.innerHTML = html + '<figcaption>' + rotulo + '</figcaption>';
+      wrap.appendChild(fig);
+      return fig.querySelector("svg");
+    }
+    var svgs = [quadro("Original de Leonardo", false), quadro("Cópia do aprendiz", true)];
 
-    var status = document.createElement("div");
-    status.className = "persp-status";
-    wrap.appendChild(status);
+    function marcar(svg, d, classe){
+      var c = svgEl("circle", { cx: d.x, cy: d.y, r: d.r, "class": classe });
+      svg.querySelector(".ceia-marcas").appendChild(c);
+      return c;
+    }
+    function errou(svg, x, y){
+      var g = svgEl("g", { "class": "ceia-xis", transform: "translate(" + x + " " + y + ")" });
+      g.appendChild(svgEl("path", { d: "M-16 -16L16 16M16 -16L-16 16" }));
+      svg.querySelector(".ceia-marcas").appendChild(g);
+      setTimeout(function(){ g.remove(); }, 700);
+    }
 
-    var quiz = document.createElement("div");
-    quiz.className = "scale-quiz hidden";
-    var pergunta = document.createElement("div");
-    pergunta.className = "scale-question";
-    pergunta.innerHTML = '<span class="ceia-parte">Parte 2:</span> ' + puzzle.pergunta;
-    quiz.appendChild(pergunta);
-    var opcoes = document.createElement("div");
-    opcoes.className = "scale-options";
-    puzzle.options.forEach(function(texto, i){
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "scale-opt";
-      b.textContent = texto;
-      b.addEventListener("click", function(){
-        if(puzzle._resolvido) return;
-        if(i !== puzzle.correctIndex){
-          b.classList.add("errada");
-          b.disabled = true;
-          feedbackEl.textContent = "Não é " + texto + ". Faça a conta de novo.";
+    svgs.forEach(function(svg){
+      svg.addEventListener("click", function(e){
+        if(puzzle._achadas >= total) return;
+        var pt = svg.createSVGPoint();
+        pt.x = e.clientX; pt.y = e.clientY;
+        pt = pt.matrixTransform(svg.getScreenCTM().inverse());
+        var achou = null, repetida = false;
+        puzzle.difs.forEach(function(d, i){
+          if(achou || Math.sqrt(Math.pow(pt.x - d.x, 2) + Math.pow(pt.y - d.y, 2)) > d.r + 10) return;
+          if(puzzle._achadasIdx[i]){ repetida = true; return; }
+          achou = d;
+          puzzle._achadasIdx[i] = true;
+        });
+        if(!achou && repetida) return; // clicou de novo numa diferença já marcada
+        if(!achou){
+          errou(svg, pt.x, pt.y);
+          feedbackEl.textContent = "Aí não tem diferença. Compare as duas pinturas com atenção!";
           feedbackEl.className = "feedback err";
           return;
         }
-        puzzle._resolvido = true;
-        b.classList.add("certa");
-        opcoes.querySelectorAll(".scale-opt").forEach(function(o){ o.disabled = true; });
-        feedbackEl.textContent = "Isso mesmo: " + texto + "! Clique em Verificar para continuar.";
+        puzzle._achadas++;
+        svgs.forEach(function(s){ marcar(s, achou, "ceia-achada"); });
+        atualizarPlacar();
+        if(puzzle._achadas >= total){
+          feedbackEl.textContent = "Você achou os " + total + " erros do aprendiz! Clique em Verificar para continuar.";
+          wrap.classList.add("completo");
+        } else {
+          feedbackEl.textContent = "Boa! " + achou.nome.charAt(0).toUpperCase() + achou.nome.slice(1) + ".";
+        }
         feedbackEl.className = "feedback ok";
       });
-      opcoes.appendChild(b);
-    });
-    quiz.appendChild(opcoes);
-    wrap.appendChild(quiz);
-
-    svg.addEventListener("click", function(e){
-      if(puzzle._achou) return;
-      var pt = svg.createSVGPoint();
-      pt.x = e.clientX; pt.y = e.clientY;
-      pt = pt.matrixTransform(svg.getScreenCTM().inverse());
-      var dist = Math.sqrt(Math.pow(pt.x - CEIA_FUGA.x, 2) + Math.pow(pt.y - CEIA_FUGA.y, 2));
-      // folga de 60 (num quadro de 960 de largura) para dar para acertar com o dedo no celular
-      if(dist > 60){
-        marca.setAttribute("cx", pt.x);
-        marca.setAttribute("cy", pt.y);
-        marca.classList.add("visivel");
-        status.textContent = "Ainda não. Continue cada linha amarela em linha reta até ela cruzar as outras.";
-        status.className = "persp-status err";
-        return;
-      }
-      puzzle._achou = true;
-      marca.classList.remove("visivel");
-      svg.classList.add("achou");
-      status.textContent = "Achou! O ponto de fuga fica na cabeça de Jesus: tudo na sala aponta para ele.";
-      status.className = "persp-status ok";
-      quiz.classList.remove("hidden");
     });
 
     puzzleBodyEl.appendChild(wrap);
@@ -2367,7 +2375,7 @@
       return true;
     }
     if(puzzle.type === "ceia"){
-      return puzzle._resolvido ? true : null;
+      return puzzle._achadas >= puzzle.difs.length ? true : null;
     }
     if(puzzle.type === "mirror"){
       var typed = puzzleBodyEl.querySelector(".mirror-input").value.replace(/\s/g, "");
@@ -2435,7 +2443,7 @@
         delay = 1500;
       }
       if(puzzle.type === "ceia"){
-        feedbackEl.textContent = "Correto! Você enxergou a Santa Ceia com os olhos de Leonardo...";
+        feedbackEl.textContent = "Correto! Nenhum erro do aprendiz escapou do seu olhar de Leonardo...";
         delay = 1500;
       }
       feedbackEl.className = "feedback ok";
@@ -2464,8 +2472,13 @@
       showScreen("vault");
       renderDots();
       vaultInput.value = "";
+      vaultInput.disabled = false;
+      btnVaultCheck.disabled = false;
       vaultFeedback.textContent = "";
       updateVaultSlots("");
+      // cofre fechado, sem sobras de uma partida anterior
+      cofreCodigo.classList.remove("cofre3d-aberto", "erro");
+      animarCofre3d(cofreCodigo);
       vaultInput.focus();
       return;
     }
@@ -2495,13 +2508,21 @@
       vaultFeedback.className = "feedback ok";
       stopTimer();
       finalTimeEl.textContent = formatTime(GAME_SECONDS - state.secondsLeft);
-      setTimeout(function(){
+      vaultInput.disabled = true;
+      btnVaultCheck.disabled = true;
+      // a porta abre aqui mesmo; a tela de vitória já mostra o cofre aberto
+      cofreCodigo.classList.remove("erro");
+      cofreCodigo.classList.add("cofre3d-aberto");
+      state.vitoriaTimer = setTimeout(function(){
         showScreen("victory");
-        animarCofre3d(cofreVitoria);
-      }, 800);
+      }, 4500);
     } else {
       vaultFeedback.textContent = "O mecanismo resiste... esse não é o código certo.";
       vaultFeedback.className = "feedback err";
+      // o cofre continua fechado: a roda emperra, ele treme e a luz fica vermelha
+      cofreCodigo.classList.remove("erro");
+      void cofreCodigo.offsetWidth;
+      cofreCodigo.classList.add("erro");
     }
   }
 
@@ -2556,6 +2577,7 @@
 
   // ---------- Restart ----------
   function restart(){
+    clearTimeout(state.vitoriaTimer); // saiu enquanto a porta abria: não pula para a vitória
     state.levelIndex = 0;
     state.puzzleIndex = 0;
     state.fragments = ["","",""];
@@ -2625,6 +2647,7 @@
   document.getElementById("btnSairSim").addEventListener("click", restart);
 
   // ---------- Init ----------
+  montarCofre3d(cofreCodigo);
   montarCofre3d(cofreVitoria);
   montarCofre3d(cofreDerrota);
   updateTimerDisplay();

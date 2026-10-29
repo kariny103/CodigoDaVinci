@@ -1132,7 +1132,7 @@ ul.rules li{ margin-bottom: 6px; }
   .mirror-sheet{ transition: none; }
 }
 
-/* ---------- A Santa Ceia: ponto de fuga da perspectiva ---------- */
+/* ---------- A Santa Ceia: jogo dos erros ---------- */
 .ceia-wrap{
   display:flex;
   flex-direction:column;
@@ -1140,35 +1140,74 @@ ul.rules li{ margin-bottom: 6px; }
   gap: 12px;
   margin: 4px auto 10px;
 }
+.ceia-placar{
+  display:flex;
+  flex-wrap: wrap;
+  align-items:center;
+  justify-content:center;
+  gap: 8px 14px;
+  width: 100%;
+  max-width: 660px;
+  padding: 10px 16px;
+  border: 1.5px dashed var(--gold);
+  border-radius: 6px;
+  background: rgba(166,120,255,0.10);
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+.ceia-placar strong{ color: var(--verdigris); }
+.ceia-bolinhas{ display:flex; gap: 6px; }
+.ceia-bolinha{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2.5px solid var(--gold);
+}
+.ceia-bolinha.achada{ background: #5dff9b; border-color: #5dff9b; box-shadow: 0 0 8px #5dff9b; }
+.ceia-quadro{
+  width: 100%;
+  max-width: 660px;
+  margin: 0;
+}
+.ceia-quadro figcaption{
+  margin-top: 4px;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gold-bright);
+}
 .ceia-svg{
   display:block;
   width: 100%;
-  max-width: 660px;
   height: auto;
   cursor: crosshair;
   border: 3px solid #8c6d46;
   border-radius: 4px;
   box-shadow: 0 8px 18px rgba(0,0,0,0.6);
 }
-/* guias amarelas com contorno escuro, para aparecerem sobre a pintura clara ou escura */
-.ceia-guias line{
-  stroke: #ffd24a;
-  stroke-width: 5;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 1px #000);
-}
-.ceia-revela{ display: none; }
-.ceia-svg.achou .ceia-revela{ display: block; }
-.ceia-svg.achou{ border-color: #5dff9b; cursor: default; }
-.ceia-revela line{ stroke: var(--wax); stroke-width: 3; stroke-dasharray: 12 8; }
-.ceia-revela circle{
-  fill: rgba(93,255,155,0.2);
+.ceia-wrap.completo .ceia-svg{ border-color: #5dff9b; cursor: default; }
+.ceia-achada{
+  fill: rgba(93,255,155,0.12);
   stroke: #5dff9b;
-  stroke-width: 5;
-  filter: drop-shadow(0 0 6px #5dff9b);
+  stroke-width: 6;
+  filter: drop-shadow(0 0 4px #000);
+  animation: ceia-pop 0.35s ease-out both;
+  transform-box: fill-box;
+  transform-origin: center;
 }
-.scale-opt.certa{ border-color: #5dff9b; background: #c9ffdc; }
-.ceia-parte{ color: var(--verdigris); }
+@keyframes ceia-pop{ from{ transform: scale(1.6); opacity: 0; } to{ transform: none; opacity: 1; } }
+.ceia-xis path{
+  stroke: #ff3b3b;
+  stroke-width: 8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 3px #000);
+}
+@media (prefers-reduced-motion: reduce){
+  .ceia-achada{ animation: none; }
+}
 
 /* ---------- Perspectiva: ponto de fuga na oficina ---------- */
 .persp-wrap{
@@ -1831,17 +1870,35 @@ ul.rules li{ margin-bottom: 6px; }
   to{ transform: rotateX(-9deg) rotateY(-12deg); }
 }
 
-/* ---- vitória: a roda gira, a luz fica verde, a porta abre e o tesouro brilha ---- */
-.cofre3d-aberto.anim .cf-roda{ animation: cf-gira 1.1s ease-in-out 0.9s both; }
-.cofre3d-aberto.anim .cf-luz{ animation: cf-luz-verde 0.2s 2s both; }
-.cofre3d-aberto.anim .cf-porta{ animation: cf-abre 1.5s cubic-bezier(.5,0,.3,1) 2.1s both; }
-.cofre3d-aberto.anim .cf-fundo::before{ animation: cf-acende 1s 2.5s both; }
-.cofre3d-aberto.anim .cf-fundo img{ animation: cf-tesouro 0.9s ease-out 3s both; }
-.cofre3d-aberto.anim .cf-faisca{ animation: cf-sobe 1.8s ease-out 3.3s infinite; }
-.cofre3d-aberto.anim .cf-faisca:nth-of-type(2){ animation-delay: 3.7s; }
-.cofre3d-aberto.anim .cf-faisca:nth-of-type(3){ animation-delay: 3.5s; }
-.cofre3d-aberto.anim .cf-faisca:nth-of-type(4){ animation-delay: 4s; }
-.cofre3d-aberto.anim .cf-faisca:nth-of-type(5){ animation-delay: 3.9s; }
+/* ---- código certo: a roda gira, a luz fica verde, a porta abre e o tesouro brilha ---- */
+/* os tempos contam a partir do momento em que o código certo é digitado */
+.cofre3d-aberto.anim .cf-roda{ animation: cf-gira 1.1s ease-in-out 0.2s both; }
+.cofre3d-aberto.anim .cf-luz{ animation: cf-luz-verde 0.2s 1.3s both; }
+.cofre3d-aberto.anim .cf-porta{ animation: cf-abre 1.5s cubic-bezier(.5,0,.3,1) 1.4s both; }
+.cofre3d-aberto.anim .cf-fundo::before{ animation: cf-acende 1s 1.8s both; }
+.cofre3d-aberto.anim .cf-fundo img{ animation: cf-tesouro 0.9s ease-out 2.3s both; }
+.cofre3d-aberto.anim .cf-faisca{ animation: cf-sobe 1.8s ease-out 2.6s infinite; }
+.cofre3d-aberto.anim .cf-faisca:nth-of-type(2){ animation-delay: 3s; }
+.cofre3d-aberto.anim .cf-faisca:nth-of-type(3){ animation-delay: 2.8s; }
+.cofre3d-aberto.anim .cf-faisca:nth-of-type(4){ animation-delay: 3.3s; }
+.cofre3d-aberto.anim .cf-faisca:nth-of-type(5){ animation-delay: 3.2s; }
+
+/* ---- tela de vitória: o cofre já aparece aberto, balançando e soltando faíscas ---- */
+.cofre3d.aberto-fixo .cofre3d-corpo{ animation: cf-balanca 4s ease-in-out infinite alternate; }
+.cofre3d.aberto-fixo .cf-porta{ transform: translateZ(calc(var(--d) / 2 + 1px)) rotateY(-118deg); }
+.cofre3d.aberto-fixo .cf-luz{ fill: #5dff9b; }
+.cofre3d.aberto-fixo .cf-fundo::before{ opacity: 1; }
+.cofre3d.aberto-fixo .cf-fundo img{ opacity: 1; transform: none; }
+.cofre3d.aberto-fixo .cf-faisca{ animation: cf-sobe 1.8s ease-out infinite; }
+.cofre3d.aberto-fixo .cf-faisca:nth-of-type(2){ animation-delay: 0.4s; }
+.cofre3d.aberto-fixo .cf-faisca:nth-of-type(3){ animation-delay: 0.2s; }
+.cofre3d.aberto-fixo .cf-faisca:nth-of-type(4){ animation-delay: 0.7s; }
+.cofre3d.aberto-fixo .cf-faisca:nth-of-type(5){ animation-delay: 0.6s; }
+
+/* ---- código errado: a roda emperra, o cofre treme e a luz pisca vermelha ---- */
+.cofre3d.erro .cf-luz{ fill: #ff3b3b; animation: cf-pisca 0.3s steps(1) 5; }
+.cofre3d.erro .cf-roda{ animation: cf-forca 1.2s ease-in-out; }
+.cofre3d.erro .cofre3d-treme{ animation: cf-treme 1.2s; }
 @keyframes cf-gira{ to{ transform: rotate(-540deg); } }
 @keyframes cf-luz-verde{ to{ fill: #5dff9b; } }
 @keyframes cf-abre{ to{ transform: translateZ(calc(var(--d) / 2 + 1px)) rotateY(-118deg); } }
@@ -1877,7 +1934,8 @@ ul.rules li{ margin-bottom: 6px; }
 
 @media (prefers-reduced-motion: reduce){
   /* sem movimento: mostra direto o estado final */
-  .cofre3d.anim *, .cofre3d.anim .cf-fundo::before{
+  .cofre3d.anim *, .cofre3d.anim .cf-fundo::before,
+  .cofre3d.erro *, .cofre3d.aberto-fixo .cofre3d-corpo{
     animation-duration: 0.01s !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
