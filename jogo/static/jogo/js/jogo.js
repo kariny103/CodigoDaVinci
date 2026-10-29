@@ -495,7 +495,7 @@
     };
   }
   // Jogo dos erros da Santa Ceia: a cópia de um aprendiz tem 5 diferenças em relação ao original.
-  // Coordenadas na imagem ceia-completa.jpg (960 x 480). Cada diferença é um desenho por cima da
+  // Coordenadas num quadro de 960 x 480 (a imagem ceia-desenho.jpg é esticada para esse tamanho). Cada diferença é um desenho por cima da
   // cópia; "{IMG}" vira o endereço da imagem, para recortar pedaços da própria pintura.
   var CEIA_DIFERENCAS = [
     { nome: "o manto vermelho de Jesus ficou verde", x: 452, y: 290, r: 50,
@@ -1020,11 +1020,11 @@
         g.appendChild(svgEl("line", { x1: spec.x1, y1: spec.y1, x2: spec.x2, y2: spec.y2, "class": "dv-shape" }));
         bx = spec.bx; by = spec.by;
       } else {
-        g.appendChild(svgEl("circle", { cx: spec.cx, cy: spec.cy, r: 19, "class": "dv-shape dv-shape-ponta" }));
+        g.appendChild(svgEl("circle", { cx: spec.cx, cy: spec.cy, r: 27, "class": "dv-shape dv-shape-ponta" }));
         bx = spec.cx; by = spec.cy;
       }
-      g.appendChild(svgEl("circle", { cx: bx, cy: by, r: 16, "class": "dv-badge" }));
-      var text = svgEl("text", { x: bx, y: by + 6, "text-anchor": "middle", "class": "dv-badge-text" });
+      g.appendChild(svgEl("circle", { cx: bx, cy: by, r: 24, "class": "dv-badge" }));
+      var text = svgEl("text", { x: bx, y: by + 8, "text-anchor": "middle", "class": "dv-badge-text" });
       text.textContent = String(value);
       g.appendChild(text);
       g.addEventListener("click", function(){ onSlot(j); });
@@ -1611,8 +1611,8 @@
 
     puzzle.nodes.forEach(function(node, idx){
       var g = svgEl("g", { "class": "bridge-node", tabindex: 0, role: "button", "aria-label": "Nó com a conta " + node.expr });
-      g.appendChild(svgEl("circle", { cx: node.x, cy: node.y, r: 33 }));
-      var text = svgEl("text", { x: node.x, y: node.y + 6, "text-anchor": "middle" });
+      g.appendChild(svgEl("circle", { cx: node.x, cy: node.y, r: 45 }));
+      var text = svgEl("text", { x: node.x, y: node.y + 7, "text-anchor": "middle" });
       text.textContent = node.expr;
       g.appendChild(text);
       g.addEventListener("click", function(){ onNode(idx); });
@@ -1856,7 +1856,8 @@
     puzzle._achadas = 0;
     puzzle._achadasIdx = {}; // posições em puzzle.difs já encontradas nesta partida
     var total = puzzle.difs.length;
-    var img = OBRAS_URL + "ceia-completa.jpg";
+    // versão em desenho, com cores mais fortes para o telão
+    var img = OBRAS_URL + "ceia-desenho.jpg";
     var wrap = document.createElement("div");
     wrap.className = "ceia-wrap";
 

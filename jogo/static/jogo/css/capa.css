@@ -110,7 +110,8 @@ h1.title{
   color: #eaf8ff;
   text-shadow: 0 0 10px rgba(166,120,255,0.7);
 }
-.capa-autoria b{ color: #ffd24a; white-space: nowrap; }
+/* mesmo rosa do "DA VINCI" do título */
+.capa-autoria b{ color: #ff6fe0; white-space: nowrap; text-shadow: 0 0 12px rgba(255,95,210,0.7); }
 
 .capa-btn{
   font-family: inherit;

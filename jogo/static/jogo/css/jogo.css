@@ -919,7 +919,7 @@ ul.rules li{ margin-bottom: 6px; }
 .bridge-status strong{ color: var(--ink); }
 .bridge-svg{
   width: 100%;
-  max-width: 620px;
+  max-width: 760px;
   height: auto;
   border: 1.5px solid rgba(166,120,255,0.45);
   border-radius: 6px;
@@ -951,7 +951,7 @@ ul.rules li{ margin-bottom: 6px; }
 }
 .bridge-node text{
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 21px;
   font-weight: bold;
   fill: #ffffff;
   pointer-events: none;
@@ -1466,7 +1466,7 @@ ul.rules li{ margin-bottom: 6px; }
 .dv-status strong{ color: var(--verdigris); font-size: 1.25rem; white-space: nowrap; }
 .dv-svg{
   width: 100%;
-  max-width: 660px;
+  max-width: 760px;
   height: auto;
   border: 1.5px solid rgba(166,120,255,0.45);
   border-radius: 6px;
@@ -1493,7 +1493,7 @@ ul.rules li{ margin-bottom: 6px; }
 .dv-badge{ fill: #0e0b22; stroke: var(--gold); stroke-width: 3; transition: fill 0.2s, stroke 0.2s; }
 .dv-badge-text{
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 23px;
   font-weight: bold;
   fill: #ffffff;
   pointer-events: none;
@@ -1991,6 +1991,14 @@ ul.rules li{ margin-bottom: 6px; }
   .picture-img-wrap{ width: 100%; height: auto; aspect-ratio: 112 / 79; }
   .picture-expr{ font-size: 1.05rem; }
   .portrait-frame{ width: min(200px, 55vw); }
+  /* pontes: o desenho usa a largura toda do cartão e os círculos com números ficam bem maiores */
+  .bridge-svg, .dv-svg{ width: calc(100% + 24px); max-width: none; margin: 0 -12px; }
+  .bridge-node circle{ r: 56px; }
+  .bridge-node text{ font-size: 27px; }
+  .dv-badge{ r: 29px; }
+  .dv-badge-text{ font-size: 28px; }
+  .dv-shape-ponta{ r: 31px; }
+
   /* cofre 3D menor; a porta abre para a esquerda, então ele fica um pouco à direita */
   .cofre3d{ --w: 150px; --h: 150px; --d: 115px; left: 32px; margin: 30px auto 44px; }
 }
