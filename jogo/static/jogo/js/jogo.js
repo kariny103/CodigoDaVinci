@@ -621,7 +621,7 @@
     [392,190], [445,190], [510,190], [450,135], [325,161],
     [445,300], [300,318], [85,310], [175,290], [575,310]
   ];
-  var STUDY_CLUES = 3;
+  var STUDY_CLUES = 6;
   function genR3P5(rng){
     var spots = shuffle(rng, STUDY_SPOTS);
     var items = STUDY_OBJECTS.map(function(o, i){ return { obj: i, x: spots[i][0], y: spots[i][1] }; });
@@ -629,8 +629,8 @@
     var names = targets.map(function(t){ return STUDY_OBJECTS[t].name; });
     return {
       type: "study",
-      question: "Leonardo era genial, mas muito bagunceiro: três objetos sumiram no meio do seu escritório! Leia cada pista, descubra de qual objeto ela fala e clique nele na imagem.",
-      hint: "Os objetos procurados são, na ordem das pistas: " + names[0] + ", " + names[1] + " e " + names[2] + ". Procure na estante, em cima da mesa, na janela e pelo chão.",
+      question: "Leonardo era genial, mas muito bagunceiro: seis objetos sumiram no meio do seu escritório! Leia cada pista, descubra de qual objeto ela fala e clique nele na imagem.",
+      hint: "Os objetos procurados são, na ordem das pistas: " + names.slice(0, -1).join(", ") + " e " + names[names.length - 1] + ". Procure na estante, em cima da mesa, na janela e pelo chão.",
       items: items,
       targets: targets
     };
@@ -737,6 +737,7 @@
   ];
 
   var finalTimeEl = document.getElementById("finalTime");
+  var cofreAnim = document.getElementById("cofreAnim");
   var capaEl = document.getElementById("screen-capa");
   var videoEl = document.getElementById("screen-video");
   var videoQuadro = document.getElementById("videoQuadro");
@@ -2454,6 +2455,10 @@
       finalTimeEl.textContent = formatTime(GAME_SECONDS - state.secondsLeft);
       setTimeout(function(){
         showScreen("victory");
+        // tira e põe a classe para a porta do cofre abrir de novo a cada vitória
+        cofreAnim.classList.remove("abrindo");
+        void cofreAnim.offsetWidth;
+        cofreAnim.classList.add("abrindo");
       }, 800);
     } else {
       vaultFeedback.textContent = "O mecanismo resiste... esse não é o código certo.";
